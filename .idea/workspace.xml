@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b9c89c1d-8f18-405c-8b81-f19424e28a4c" name="Changes" comment="" />
+    <list default="true" id="b9c89c1d-8f18-405c-8b81-f19424e28a4c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/database/migrations/2016_05_26_034047_create_countries_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2016_05_26_034105_create_states_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2016_05_26_034120_create_cities_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CitiesTableChunkFiveSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CitiesTableChunkFourSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CitiesTableChunkOneSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CitiesTableChunkThreeSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CitiesTableChunkTwoSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CountriesTableSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/StatesTableSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2017_10_12_000000_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_100000_create_password_reset_tokens_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2017_10_12_100000_create_password_reset_tokens_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -175,12 +190,17 @@
     </include_path>
   </component>
   <component name="ProjectId" id="2diuj231I9oHh06zyunVtQwN0ii" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -209,7 +229,7 @@
       <option name="presentableId" value="Default" />
       <updated>1710503353898</updated>
       <workItem from="1710503356487" duration="1332000" />
-      <workItem from="1710841229173" duration="3544000" />
+      <workItem from="1710841229173" duration="4609000" />
     </task>
     <servers />
   </component>
@@ -226,5 +246,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
