@@ -5,10 +5,12 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -28,8 +30,15 @@ class MngPanelProvider extends PanelProvider
             ->path('mng')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => Color::Blue,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+                'green' => Color::Green,
             ])
+            ->brandName('Sicilsaldo Group')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -53,6 +62,21 @@ class MngPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(MaxWidth::Full)
+            ->navigationGroups([
+
+                NavigationGroup::make()
+                    ->label('Elenchi'),
+                NavigationGroup::make()
+                    ->label('Work'),
+                NavigationGroup::make()
+                    ->label('Setting'),
+//                NavigationGroup::make()
+//                    ->label(fn (): string => __('navigation.setting'))
+//                    ->icon('heroicon-o-cog-6-tooth')
+//                    ->collapsed(),
             ]);
     }
 }

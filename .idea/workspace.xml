@@ -5,34 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9c89c1d-8f18-405c-8b81-f19424e28a4c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Models/City.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Country.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/State.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Providers/Filament/MngPanelProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/css/filament/filament/app.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/css/filament/forms/forms.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/css/filament/support/support.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/filament/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/filament/echo.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/color-picker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/date-time-picker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/file-upload.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/key-value.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/markdown-editor.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/rich-editor.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/select.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/tags-input.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/forms/components/textarea.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/notifications/notifications.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/support/async-alpine.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/support/support.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/tables/components/table.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/widgets/components/chart.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/filament/widgets/components/stats-overview/stat/chart.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Filament/Resources/UserResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Filament/Resources/UserResource/Pages/CreateUser.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Filament/Resources/UserResource/Pages/EditUser.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Filament/Resources/UserResource/Pages/ListUsers.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Providers/Filament/MngPanelProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/Filament/MngPanelProvider.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,7 +223,7 @@
       <option name="presentableId" value="Default" />
       <updated>1710503353898</updated>
       <workItem from="1710503356487" duration="1332000" />
-      <workItem from="1710841229173" duration="6055000" />
+      <workItem from="1710841229173" duration="7021000" />
     </task>
     <servers />
   </component>
