@@ -28,7 +28,14 @@ class PeopleResource extends Resource
 {
     protected static ?string $model = People::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Rubrica';
+
+    protected static ?string $pluralModelLabel = 'Rubrica';
+    protected static ?string $navigationGroup = 'Elenchi';
+
+    protected static ?string $navigationLabel = 'Rubrica';
+
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
     public static function form(Form $form): Form
     {
@@ -38,12 +45,10 @@ class PeopleResource extends Resource
                     ->schema([
                         TextInput::make('firstname')
                             ->label('Nome')
-                            ->required()
-                            ->columnSpan(2),
+                            ->required(),
                         TextInput::make('lastname')
                             ->label('Cognome')
-                            ->required()
-                            ->columnSpan(2),
+                            ->required(),
 
                         TextInput::make('CF')
                             ->label('Codice Fiscale')
