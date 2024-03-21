@@ -101,17 +101,17 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn(string $state):string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->label('Password')
-                    ->password()
+                    ->password(),
 
-//                Select::make('roles')
-//                    ->multiple()
-//                    ->relationship('roles','name'),
-//
-//                Select::make('projects')
-//                    ->label('Commesse')
-//                    ->preload()
-//                    ->multiple()
-//                    ->relationship('projects','code'),
+                Select::make('roles')
+                    ->multiple()
+                    ->relationship('roles','name'),
+
+                Select::make('projects')
+                    ->label('Commesse')
+                    ->preload()
+                    ->multiple()
+                    ->relationship('projects','code'),
             ]);
     }
 
