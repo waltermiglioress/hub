@@ -8,6 +8,7 @@ use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -76,5 +77,9 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function city():BelongsTo{
         return $this->belongsTo(City::class);
+    }
+
+    public function projects():BelongsToMany{
+        return $this->belongsToMany(Project::class,'project_user')->withTimestamps();
     }
 }
