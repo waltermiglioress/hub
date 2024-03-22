@@ -42,7 +42,9 @@ class ProductionResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
+                Section::make('Parte generale')
+                    ->description('Descrizione della parte generale')
+                    ->aside()
                     ->schema([
                         Select::make('client_id')->label('Cliente')
                             ->relationship('client','name')
@@ -63,8 +65,10 @@ class ProductionResource extends Resource
                         TextInput::make('type')->label('Tipologia')->required(),
 //                        TextInput::make('doc_id')->label('ID Documento')->required(),
                         TextInput::make('percentage')->label('Percentuale')->suffix('%')->numeric()->required(),
-                    ])->inlineLabel()->live(),
-                Section::make()
+                    ])->columnSpan(1)->inlineLabel()->live(),
+                Section::make('Dettaglio')
+                    ->description('Parte legata alla descrizione ed eventuali istruzioni per bambini cani gatti etc etc')
+                    ->aside()
                     ->schema([
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
@@ -99,7 +103,7 @@ class ProductionResource extends Resource
                             })
                         ->disabled()
                         ,
-                    ])->inlineLabel()
+                    ])->columnSpan(1)->inlineLabel()
                 //
             ]);
     }
