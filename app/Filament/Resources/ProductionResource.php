@@ -61,7 +61,7 @@ class ProductionResource extends Resource
                             ->required(),
                         TextInput::make('desc')->label('Descrizione'),
                         TextInput::make('type')->label('Tipologia')->required(),
-                        TextInput::make('doc_id')->label('ID Documento')->required(),
+//                        TextInput::make('doc_id')->label('ID Documento')->required(),
                         TextInput::make('percentage')->label('Percentuale')->suffix('%')->numeric()->required(),
                     ])->inlineLabel()->live(),
                 Section::make()
