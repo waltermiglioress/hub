@@ -108,10 +108,11 @@ class UserResource extends Resource
                     ->relationship('roles','name'),
 
                 Select::make('projects')
+                    ->relationship('projects','code')
                     ->label('Commesse')
+                    ->searchable()
                     ->preload()
                     ->multiple()
-                    ->relationship('projects','code'),
             ]);
     }
 

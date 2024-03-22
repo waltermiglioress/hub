@@ -12,6 +12,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -44,8 +46,8 @@ class ProjectResource extends Resource
                     ->required(),
                 Radio::make('status')
                     ->options([
-                        '0' => 'Attiva',
-                        '1' => 'Non attiva',
+                        '0' => 'Non attiva',
+                        '1' => 'Attiva',
                     ])
                     ->inline()
                     ->required(),
@@ -69,7 +71,18 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('code')
+                ->label('Codice'),
+                TextColumn::make('group')
+                ->label('Gruppo'),
+                TextColumn::make('desc')
+                    ->label('Descrizione')
+                    ->wrap(),
+                TextColumn::make('contract')
+                    ->label('N. Contratto'),
+                IconColumn::make('status')
+                    ->label('Stato')
+                    ->boolean()
             ])
             ->filters([
                 //

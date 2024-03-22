@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductionResource\Pages;
 
 use App\Models\Production;
+use App\Models\Project;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -17,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ProductionResource extends Resource
 {
@@ -40,8 +42,17 @@ class ProductionResource extends Resource
                         Select::make('client_id')->label('Cliente')
                             ->relationship('client','name')
                             ->required(),
-                        Select::make('project_id')->label('Commessa')
-                            ->relationship('projects','code',fn (Builder $query)=>$query->whereBelongsTo('user','user','true'))
+                        Select::make('project_id')
+                            ->label('Commessa')
+                            ->options(Project::whereHas('users',function ($query){
+                                $query->where('user_id',Auth::id());
+                            })->pluck('code','id'))
+                            ->searchable()
+                            ->preload()
+//                            ->relationship(
+//                                'projects',
+//                                'code',
+//                                fn (Builder $query)=>$query->whereBelongsTo('user','user','true'))
                             ->required(),
                         TextInput::make('desc')->label('Descrizione'),
                         TextInput::make('type')->label('Tipologia')->required(),
