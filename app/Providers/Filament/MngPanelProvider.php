@@ -79,6 +79,7 @@ class MngPanelProvider extends PanelProvider
 //                    ->icon('heroicon-o-cog-6-tooth')
 //                    ->collapsed(),
             ])
+            ->viteTheme('resources/css/filament/mng/theme.css')
             ->plugin(
 
                 FilamentShieldPlugin::make()
@@ -97,6 +98,7 @@ class MngPanelProvider extends PanelProvider
                         'default' => 1,
                         'sm' => 2,
                     ]),
+
             //FilamentSpatieRolesPermissionsPlugin::make()
             );
     }
