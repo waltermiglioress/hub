@@ -10,7 +10,6 @@ class Production extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'doc_id',
         'desc',
         'type',
         'percentage',
@@ -18,15 +17,18 @@ class Production extends Model
         'date_start',
         'date_end',
         'status',
+        'client_id',
         'ft',
         'date_ft',
-        'note'
+        'note',
+        'project_id',
+
     ];
 
     public function client(): belongsTo {
-        return $this->belongsTo(CliFor::class,'client');
+        return $this->belongsTo(CliFor::class);
     }
-    public function projects(): belongsTo {
+    public function project(): belongsTo {
         return $this->belongsTo(Project::class);
     }
 }
