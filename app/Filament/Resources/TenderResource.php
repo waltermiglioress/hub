@@ -6,11 +6,11 @@ use App\Enums\TenderAttrBuEnum;
 use App\Enums\TenderAttrFluidEnum;
 use App\Enums\TenderStatusEnum;
 use App\Filament\Resources\TenderResource\Pages;
-use App\Filament\Resources\TenderResource\RelationManagers;
 use App\Models\City;
 use App\Models\State;
 use App\Models\Tender;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
@@ -56,6 +56,10 @@ class TenderResource extends Resource
                             ->relationship('clifor','name')
                             ->searchable()
                             ->preload()
+                            ->createOptionForm(fn(Form $form)=>CliForResource::form($form))
+                            ->createOptionAction(
+                                fn (Action $action) => $action->modalWidth('5xl'),
+                            )
                             ->required(),
                         TextInput::make('rdo')->label('RDO')->required(),
                         TextInput::make('cig')->label('CIG')->required(),
@@ -118,10 +122,10 @@ class TenderResource extends Resource
 //                                    ])
                                     ->inline()
                                     ->inlineLabel(false),
-                                ToggleButtons::make('inspection')
-                                    ->label('Sopralluogo eseguito?')
-                                    ->boolean()
-                                    ->inline(),
+                               ToggleButtons::make('inspection')
+                                   ->label('Sopralluogo eseguito?')
+                                   ->boolean()
+                                   ->grouped(),
 //                                Fieldset::make('Indirizzi')
 //                                    ->schema([
                                 Select::make('country_id')

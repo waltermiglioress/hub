@@ -6,6 +6,7 @@ use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -56,7 +57,11 @@ class ProjectResource extends Resource
                     ->options(['Sicilsaldo','Nuova Ghizzoni']),
                 Select::make('clifor_id')
                     ->label('Cliente')
-                    ->relationship('clifor','name'),
+                    ->relationship('clifor','name')
+                    ->createOptionForm(fn(Form $form)=>CliForResource::form($form))
+                    ->createOptionAction(
+                        fn (Action $action) => $action->modalWidth('5xl'),
+                    ),
                 Select::make('tender_id')
                     ->label('Gara')
                     ->relationship('tender','num'),
