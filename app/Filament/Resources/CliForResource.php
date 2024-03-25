@@ -20,7 +20,12 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -137,7 +142,80 @@ class CliForResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Split::make([
+
+                    ImageColumn::make('avatar')
+                        ->label('Logo')
+                        ->size(60)
+                        ->toggleable()
+                        ->grow(false),
+
+
+                    Stack::make([
+                        TextColumn::make('name')
+                            ->label('Ragione Sociale')
+                            ->weight(FontWeight::Bold)
+                            ->searchable()
+                            ->grow(false)
+                            ->sortable(),
+                        TextColumn::make('piva')
+                            ->label('P.IVA')
+                            ->searchable()
+                            ->grow(false),
+                        TextColumn::make('cf')
+                            ->label('CF')
+                            ->searchable()
+                            ->grow(false)
+                            ->toggleable(),
+                    ]),
+
+                    Stack::make([
+
+
+                        TextColumn::make('client')
+                            ->label('Tipologia')
+                            ->grow(false)
+                            ->visible(false)
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        TextColumn::make('city.name')
+                            ->label('Sede')
+                            ->sortable()
+                            ->grow(false),
+                        TextColumn::make('address')
+                            ->label('Indirizzo')
+                            ->grow(false),
+                    ]),
+
+                    Stack::make([
+                        TextColumn::make('cap')
+                            ->label('CAP')
+                            ->grow(false),
+                        TextColumn::make('country.name')
+                            ->label('Paese')
+                            ->toggleable()
+                            ->grow(false),
+                        TextColumn::make('state.name')
+                            ->label('Regione/Provincia')
+                            ->toggleable()
+                            ->grow(false),
+                    ]),
+
+                    Stack::make([
+
+                        TextColumn::make('tel')
+                            ->label('Telefono')
+                            ->icon('heroicon-m-phone')
+                            ->grow(false),
+                        TextColumn::make('email')
+                            ->icon('heroicon-m-envelope')
+                            ->label('Email')
+                            ->grow(false),
+                        TextColumn::make('website')
+                            ->label('Website')
+                            ->icon('heroicon-m-globe-alt')
+                            ->grow(false),
+                    ]),
+                ]),
             ])
             ->filters([
                 //
