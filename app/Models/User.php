@@ -65,7 +65,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function getFilamentName(): string
     {
-        return "$this->name $this->username";
+        return "{$this->name} {$this->surnname}";
     }
 
     public function country():BelongsTo{

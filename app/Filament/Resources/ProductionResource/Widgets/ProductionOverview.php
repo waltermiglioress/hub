@@ -35,6 +35,10 @@ class ProductionOverview extends BaseWidget
 //                ->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('danger'),
+            Stat::make('Produzione in corso', '€'.Production::query()->where('imponibile','>',0,'and')->where('status','in corso')->sum('imponibile'))
+//                ->description('3% increase')
+                ->descriptionIcon('heroicon-m-arrow-trending-up')
+                ->color('primary'),
         ];
     }
 }

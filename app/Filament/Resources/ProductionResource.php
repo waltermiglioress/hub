@@ -126,6 +126,7 @@ class ProductionResource extends Resource
                                 'fatturato'=>'FATTURATO',
                                 'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
                                 'stimato'=>'STIMATO',
+                                'in corso'=>'IN CORSO',
                             ])
                             ->required(),
                         TextInput::make('imponibile')
@@ -178,6 +179,7 @@ class ProductionResource extends Resource
                         'fatturato' => 'success',
                         'contabilizzato e non ft' => 'warning',
                         'stimato' => 'estimated',
+                        'in corso'=>'primary',
                     }),
 
                 TextColumn::make('ft')->label('Fattura')
