@@ -14,6 +14,7 @@ class Production extends Model
         'type',
         'percentage',
         'value',
+        'imponibile',
         'date_start',
         'date_end',
         'status',

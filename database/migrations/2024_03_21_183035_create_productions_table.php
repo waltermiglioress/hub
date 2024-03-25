@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char('type',50)->default('SAL');
             $table->integer('percentage')->nullable();
             $table->double('value')->default(0.0);
+            $table->double('imponibile')->default(0.0);
             $table->date('date_start')->default(now());
             $table->date('date_end')->default(now());
             $table->char('status',50)->default('in corso');

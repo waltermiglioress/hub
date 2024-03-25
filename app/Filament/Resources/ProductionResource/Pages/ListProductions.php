@@ -18,4 +18,11 @@ class ListProductions extends ListRecords
         ];
     }
 
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ProductionResource\Widgets\ProductionOverview::class
+        ];
+    }
 }

@@ -4,10 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductionResource\Pages;
 
+use App\Filament\Resources\ProductionResource\Widgets\ProductionOverview;
 use App\Models\Production;
 use App\Models\Project;
 use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
+use Filament\Forms\Components\Component;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
@@ -19,11 +24,15 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use Illuminate\Foundation\Testing\Concerns\InteractsWithContainer;
 use Illuminate\Support\Facades\Auth;
 
 class ProductionResource extends Resource
@@ -69,10 +78,20 @@ class ProductionResource extends Resource
                                 'ODL',
                                 'MAP',
                             ])
-                            ->label('Tipologia')
+                            ->label('Identificativo')
                             ->required(),
 //                        TextInput::make('doc_id')->label('ID Documento')->required(),
-                        TextInput::make('percentage')->label('Percentuale')->suffix('%')->numeric()->maxValue(100)->required(),
+                        TextInput::make('percentage')
+                            ->label('Percentuale')
+                            ->suffix('%')
+                            ->numeric()
+                            ->maxValue(100)
+                            ->afterStateUpdated(function (Set $set,$get, $state){
+                                $calc=(int)$get('value')*($state/100);
+                                $set('imponibile',$calc);
+                            })
+                            ->debounce(600)
+                            ->required(),
                     ])->columnSpan(1)->inlineLabel()->live(),
                 Section::make('Dettaglio')
                     ->description('Parte legata alla descrizione ed eventuali istruzioni per bambini cani gatti etc etc')
@@ -85,6 +104,11 @@ class ProductionResource extends Resource
                             ->numeric()
                             ->prefix('€')
                             ->label('Valore produzione')
+                            ->afterStateUpdated(function (Set $set,$get, $state){
+                                $calc=(int)$get('percentage')*($state/100);
+                                $set('imponibile',$calc);
+                            })
+                            ->debounce(600)
                             ->required(),
                         DatePicker::make('date_start')->native(false)
                             ->label('Data inizio')
@@ -105,15 +129,12 @@ class ProductionResource extends Resource
                             ])
                             ->required(),
                         TextInput::make('imponibile')
-//                        ->mask(RawJs::make('$money($input)'))
-                        //->stripCharacters(',')
                         ->prefix('€')
-                        ->numeric()
-                            ->placeholder(function (callable $get){
-                            return (int)$get('value')*(int)$get('percentage')/100;
-                            })
-                        ->disabled()
-                        ,
+                        ->readOnly()
+
+                        ->live()
+
+
                     ])->columnSpan(1)->inlineLabel()
                 //
             ]);
@@ -126,15 +147,31 @@ class ProductionResource extends Resource
                 TextColumn::make('project.code')->label('Commessa')->searchable()->sortable(),
                 TextColumn::make('client.name')->label('Cliente')->searchable()->sortable(),
                 TextColumn::make('desc')->label('Descrizione')->words(10)->wrap(),
-                TextColumn::make('date_start')->date('d/m/Y'),
-                TextColumn::make('date_end')->date('d/m/Y'),
-                TextColumn::make('type')->label('Tipo'),
-                ProgressColumn::make('percentage')
-                    ->label('Percentuale'),
-//                Tables\Columns\TextColumn::make('percentage')->label('Percentuale')->sortable(),
-                TextColumn::make('value')->label('Valore')
-                    ->money('eur',true)
-                    ->sortable(),
+                ColumnGroup::make('Date',[
+                    TextColumn::make('date_start')->date('d/m/Y'),
+                    TextColumn::make('date_end')->date('d/m/Y'),
+                ])->alignment(Alignment::Center)
+                    ->wrapHeader(),
+                TextColumn::make('type')->label('Identificativo')->searchable(),
+                ColumnGroup::make('Valori',[
+                    TextColumn::make('value')->label('Valore')
+                        ->money('eur',true)
+                        ->sortable()
+                        ->summarize(
+                            Sum::make()->label('Totale')->money('EUR')
+                        ),
+                    ProgressColumn::make('percentage')
+                        ->label('Percentuale'),
+
+                    TextColumn::make('imponibile')
+                        ->label('Imponibile')
+                        ->money('eur',true)->sortable()
+                        ->summarize(
+                            Sum::make()->label('Totale')->money('EUR'))
+                ])->alignment(Alignment::Center)
+                    ->wrapHeader(),
+
+
                 TextColumn::make('status')->label('Stato')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -143,22 +180,16 @@ class ProductionResource extends Resource
                         'stimato' => 'estimated',
                     }),
 
-                TextColumn::make('imponibile')
-                    ->label('Imponibile')
-
-                    ->money('eur',true)->sortable()
-                    ->getStateUsing(function (Model $record) {
-                        if (isset($record->value) && isset($record->percentage)) {
-                            if (!empty($record->value && !empty($record->percentage))) {
-                                return $record->value * $record->percentage/100;
-                            }
-                        }
-                    }),
-
                 TextColumn::make('ft')->label('Fattura')
                     ->searchable()->sortable(),
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
+//            ->groups([
+//                'status',
+//                'type',
+//            ])
+//            ->defaultGroup('status')
+
             ->filters([
                 //
             ])
@@ -198,6 +229,7 @@ class ProductionResource extends Resource
             'edit' => Pages\EditProduction::route('/{record}/edit'),
         ];
     }
+
 
     public static function getEloquentQuery(): Builder
     {
