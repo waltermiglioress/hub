@@ -6,6 +6,7 @@ use App\Filament\Resources\ProductionResource\Pages;
 
 use App\Models\Production;
 use App\Models\Project;
+use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
 use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
@@ -62,9 +63,16 @@ class ProductionResource extends Resource
 //                                fn (Builder $query)=>$query->whereBelongsTo('user','user','true'))
                             ->required(),
                         TextInput::make('desc')->label('Descrizione'),
-                        TextInput::make('type')->label('Tipologia')->required(),
+                        TextInput::make('type')
+                            ->datalist([
+                                'SAL',
+                                'ODL',
+                                'MAP',
+                            ])
+                            ->label('Tipologia')
+                            ->required(),
 //                        TextInput::make('doc_id')->label('ID Documento')->required(),
-                        TextInput::make('percentage')->label('Percentuale')->suffix('%')->numeric()->required(),
+                        TextInput::make('percentage')->label('Percentuale')->suffix('%')->numeric()->maxValue(100)->required(),
                     ])->columnSpan(1)->inlineLabel()->live(),
                 Section::make('Dettaglio')
                     ->description('Parte legata alla descrizione ed eventuali istruzioni per bambini cani gatti etc etc')
@@ -78,19 +86,22 @@ class ProductionResource extends Resource
                             ->prefix('€')
                             ->label('Valore produzione')
                             ->required(),
-                        DatePicker::make('date_start')
+                        DatePicker::make('date_start')->native(false)
                             ->label('Data inizio')
                             ->displayFormat('d/m/Y')
+                            ->suffixIcon('heroicon-o-calendar-days')
                             ->required(),
-                        DatePicker::make('date_end')
+                        DatePicker::make('date_end')->native(false)
                             ->label('Data fine')
                             ->displayFormat('d/m/Y')
+                            ->after('date_start')
+                            ->suffixIcon('heroicon-o-calendar-days')
                             ->required(),
                         Select::make('status')->label('Stato')
                             ->options([
-                                0=>'FATTURATO',
-                                1=>'CONTABILIZZATO E NON FATTURATO',
-                                2=>'STIMATO',
+                                'fatturato'=>'FATTURATO',
+                                'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
+                                'stimato'=>'STIMATO',
                             ])
                             ->required(),
                         TextInput::make('imponibile')
@@ -125,7 +136,12 @@ class ProductionResource extends Resource
                     ->money('eur',true)
                     ->sortable(),
                 TextColumn::make('status')->label('Stato')
-                    ->badge(),
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'fatturato' => 'success',
+                        'contabilizzato e non ft' => 'warning',
+                        'stimato' => 'estimated',
+                    }),
 
                 TextColumn::make('imponibile')
                     ->label('Imponibile')
@@ -182,4 +198,11 @@ class ProductionResource extends Resource
             'edit' => Pages\EditProduction::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+
+        return parent::getEloquentQuery()->whereIn('project_id',auth()->user()->projects()->pluck('id'));
+    }
+
 }

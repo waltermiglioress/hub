@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ProductionResource\Pages;
 use App\Filament\Resources\ProductionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListProductions extends ListRecords
 {
@@ -16,4 +17,5 @@ class ListProductions extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
 }

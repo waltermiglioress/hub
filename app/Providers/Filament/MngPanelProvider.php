@@ -7,6 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -38,6 +39,7 @@ class MngPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
                 'green' => Color::Green,
+                'estimated' => Color::Purple,
             ])
             ->brandName('Sicilsaldo Group')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -78,6 +80,18 @@ class MngPanelProvider extends PanelProvider
 //                    ->label(fn (): string => __('navigation.setting'))
 //                    ->icon('heroicon-o-cog-6-tooth')
 //                    ->collapsed(),
+            ])
+            ->navigationItems([
+                NavigationItem::make('PowerBi')
+                    ->url('https://app.powerbi.com', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-chart-pie')
+                    ->sort(99)
+
+                    //->group('Reports')
+                    //->label(fn (): string => __('filament-panels::pages/dashboard.title'))
+                    //->url(fn (): string => Dashboard::getUrl())
+                    //->isActiveWhen(fn () => request()->routeIs('filament.admin.pages.dashboard')),
+
             ])
             ->viteTheme('resources/css/filament/mng/theme.css')
             ->plugin(

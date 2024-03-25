@@ -49,9 +49,12 @@ class TenderResource extends Resource
                 Section::make('Dati Generali')
                     ->description('Inserisci i dati generali relativi la gara')
                     ->schema([
-                        Select::make('group')->label('Gruppo')
-                            ->options(['Sicilsaldo','Nuova Ghizzoni'])
-                            ->required(),
+                        Select::make('group')
+                            ->label('Gruppo')
+                            ->options([
+                                'Sicilsaldo'=>'SICILSALDO',
+                                'Nuova Ghizzoni'=>'NUOVA GHIZZONI'
+                            ]),
                         Select::make('client_id')->label('Cliente')
                             ->relationship('clifor','name')
                             ->searchable()

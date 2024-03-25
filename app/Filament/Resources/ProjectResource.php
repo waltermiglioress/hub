@@ -54,20 +54,26 @@ class ProjectResource extends Resource
                     ->required(),
                 Select::make('group')
                     ->label('Gruppo')
-                    ->options(['Sicilsaldo','Nuova Ghizzoni']),
+                    ->options([
+                        'Sicilsaldo'=>'SICILSALDO',
+                        'Nuova Ghizzoni'=>'NUOVA GHIZZONI'
+                        ])
+                    ->required(),
                 Select::make('clifor_id')
                     ->label('Cliente')
                     ->relationship('clifor','name')
                     ->createOptionForm(fn(Form $form)=>CliForResource::form($form))
                     ->createOptionAction(
                         fn (Action $action) => $action->modalWidth('5xl'),
-                    ),
+                    )
+                    ->required(),
                 Select::make('tender_id')
                     ->label('Gara')
                     ->relationship('tender','num'),
                 Select::make('responsible_id')
                     ->label('Responsabile')
-                    ->relationship('manager','firstname'),
+                    ->relationship('manager','firstname')
+                    ->searchable(),
 
             ]);
     }
