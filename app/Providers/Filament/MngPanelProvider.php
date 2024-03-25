@@ -29,6 +29,7 @@ class MngPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('mng')
+            ->databaseNotifications()
             ->path('mng')
             ->login()
             ->colors([

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\ProductionExporter;
 use App\Filament\Resources\ProductionResource\Pages;
 
 use App\Filament\Resources\ProductionResource\Widgets\ProductionOverview;
@@ -23,10 +24,15 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -186,6 +192,7 @@ class ProductionResource extends Resource
                     ->searchable()->sortable(),
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
+
 //            ->groups([
 //                'status',
 //                'type',
@@ -193,14 +200,22 @@ class ProductionResource extends Resource
 //            ->defaultGroup('status')
 
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'fatturato'=>'FATTURATO',
+                        'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
+                        'stimato'=>'STIMATO',
+                        'in corso'=>'IN CORSO',
+                    ])
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(ProductionExporter::class)
                 ])
 
             ])
