@@ -20,16 +20,17 @@ class ProductionOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Produzione fatturata', $this->getPageTableQuery()->where('imponibile','>',0)->sum('imponibile'))
-                ->description('32k increase')
+//            Stat::make('Produzione fatturata', '€'.$this->getPageTableQuery()->where('imponibile','>',0,'and',)->sum('imponibile'))
+            Stat::make('Produzione fatturata', '€'.$this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','fatturato')->sum('imponibile'))
+//                ->description('32k increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            Stat::make('Produzione stimata', '21%')
-                ->description('7% increase')
+            Stat::make('Produzione stimata', '€'.$this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','stimato')->sum('imponibile'))
+//                ->description('7% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('estimated'),
-            Stat::make('Produzione contabilizzata e non fatturata', '3:12')
-                ->description('3% increase')
+            Stat::make('Produzione contabilizzata e non fatturata', '€'.$this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','contabilizzato e non ft')->sum('imponibile'))
+//                ->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('danger'),
         ];
