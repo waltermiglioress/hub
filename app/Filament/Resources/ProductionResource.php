@@ -31,6 +31,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -155,8 +156,8 @@ class ProductionResource extends Resource
                 TextColumn::make('client.name')->label('Cliente')->searchable()->sortable(),
                 TextColumn::make('desc')->label('Descrizione')->words(10)->wrap(),
                 ColumnGroup::make('Date',[
-                    TextColumn::make('date_start')->date('d/m/Y'),
-                    TextColumn::make('date_end')->date('d/m/Y'),
+                    TextColumn::make('date_start')->date('d/m/Y')->label('Data inizio'),
+                    TextColumn::make('date_end')->date('d/m/Y')->label('Data fine'),
                 ])->alignment(Alignment::Center)
                     ->wrapHeader(),
                 TextColumn::make('type')->label('Identificativo')->searchable(),
@@ -201,13 +202,42 @@ class ProductionResource extends Resource
 
             ->filters([
                 SelectFilter::make('status')
+                    ->label('Stato')
+                    ->multiple()
                     ->options([
                         'fatturato'=>'FATTURATO',
                         'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
                         'stimato'=>'STIMATO',
                         'in corso'=>'IN CORSO',
-                    ])
-            ])
+                    ]),
+                SelectFilter::make('project_id')
+                    ->label('Commessa')
+                    ->options(Project::whereHas('users',function ($query){
+                        $query->where('user_id',Auth::id());
+                    })->pluck('code','id'))
+                    ->searchable()
+                    ->preload(),
+
+
+                SelectFilter::make('client.name')->label('Cliente')
+                ->searchable(),
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->label('Data inizio'),
+                        DatePicker::make('created_until')->label('Data fine'),
+                    ])->columns(2)->columnSpan(2)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date_start', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date_end', '<=', $date),
+                            );
+                    })
+            ],layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
