@@ -196,8 +196,11 @@ class ProductionResource extends Resource
                         'in corso'=>'primary',
                     }),
 
-                TextColumn::make('ft')->label('Fattura')
-                    ->searchable()->sortable(),
+                TextColumn::make('updated_at')->dateTime('d/m/y H:i','Europe/Rome')->label('Ultimo aggiornamento'),
+
+
+//                TextColumn::make('ft')->label('Fattura')
+//                    ->searchable()->sortable(),
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
 
