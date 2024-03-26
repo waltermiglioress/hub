@@ -29,6 +29,7 @@ use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -181,6 +182,12 @@ class ProductionResource extends Resource
 
 
                 TextColumn::make('status')->label('Stato')
+//                    ->options([
+//                        'fatturato'=>'FATTURATO',
+//                        'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
+//                        'stimato'=>'STIMATO',
+//                        'in corso'=>'IN CORSO',
+//                    ]),
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'fatturato' => 'success',
