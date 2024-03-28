@@ -239,9 +239,10 @@ class ProductionResource extends Resource
                     ->preload(),
 
 
-                SelectFilter::make('client.name')->label('Cliente')
+                SelectFilter::make('client_id')->label('Cliente')
                     ->preload()
-                ->searchable(),
+                    ->relationship('client','name')
+                    ->searchable(),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')->label('Data inizio'),

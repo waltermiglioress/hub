@@ -9,7 +9,7 @@
     @apply flex h-full items-center justify-center bg-primary-600 dark:bg-primary-500 rounded-r-full shadow-inner text-xs font-bold text-white;
 }
 
-.mng-wdg-prd span,div {
+div.mng-wdg-prd *{
     @apply !text-gray-50
 }
 .mng-wip-card{
@@ -29,7 +29,7 @@
     @apply bg-primary-600
 }
 
-.fi-sidebar-item-label,.fi-sidebar-group-label {
+.fi-sidebar-item-label,.fi-sidebar-group-label, .fi-logo {
     @apply text-gray-100
 }
 
