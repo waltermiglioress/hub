@@ -104,9 +104,10 @@ class UserResource extends Resource
                     ->password(),
 
                 Select::make('roles')
+                    ->relationship('roles', 'name')
                     ->multiple()
-                    ->relationship('roles','name'),
-
+                    ->preload()
+                    ->searchable(),
                 Select::make('projects')
                     ->relationship('projects','code')
                     ->label('Commesse')

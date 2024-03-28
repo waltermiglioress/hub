@@ -26,19 +26,28 @@ class ProductionOverview extends BaseWidget
             Stat::make('Produzione fatturata', '€'.number_format(Production::query()->where('imponibile','>',0,'and')->where('status','fatturato')->sum('imponibile'),2,',','.'))
 //                ->description('32k increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color('success'),
+                ->color('success')
+                ->extraAttributes([
+                    'class' => 'mng-wdg-prd mng-inv-card']),
             Stat::make('Produzione stimata', '€'.number_format(Production::query()->where('imponibile','>',0,'and')->where('status','stimato')->sum('imponibile'),2,',','.'))
 //                ->description('7% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
-                ->color('estimated'),
+
+                ->color('estimated')
+                ->extraAttributes([
+                    'class' => 'mng-wdg-prd mng-est-card']),
             Stat::make('Produzione contabilizzata e non fatturata','€'.number_format( Production::query()->where('imponibile','>',0,'and')->where('status','contabilizzato e non ft')->sum('imponibile'),2,',','.'))
 //                ->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color('danger'),
+                ->color('danger')
+                ->extraAttributes([
+                    'class' => 'mng-wdg-prd mng-cont-card']),
             Stat::make('Produzione in corso', '€'.number_format(Production::query()->where('imponibile','>',0,'and')->where('status','in corso')->sum('imponibile'),2,',','.'))
 //                ->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color('primary'),
+                ->color('primary')
+                ->extraAttributes([
+                    'class' => 'mng-wdg-prd mng-wip-card']),
         ];
     }
 }

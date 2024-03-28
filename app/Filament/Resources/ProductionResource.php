@@ -11,6 +11,8 @@ use App\Models\Project;
 use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Enums\Alignment;
@@ -62,7 +64,6 @@ class ProductionResource extends Resource
             ->schema([
                 Section::make('Parte generale')
                     ->description('Descrizione della parte generale')
-                    ->aside()
                     ->schema([
                         Select::make('client_id')->label('Cliente')
                             ->relationship('client','name')
@@ -79,7 +80,7 @@ class ProductionResource extends Resource
 //                                'code',
 //                                fn (Builder $query)=>$query->whereBelongsTo('user','user','true'))
                             ->required(),
-                        TextInput::make('desc')->label('Descrizione'),
+                        TextInput::make('desc')->label('Descrizione attività')->columnSpan(2),
                         TextInput::make('type')
                             ->datalist([
                                 'SAL',
@@ -100,11 +101,7 @@ class ProductionResource extends Resource
                             })
                             ->debounce(600)
                             ->required(),
-                    ])->columnSpan(1)->inlineLabel()->live(),
-                Section::make('Dettaglio')
-                    ->description('Parte legata alla descrizione ed eventuali istruzioni per bambini cani gatti etc etc')
-                    ->aside()
-                    ->schema([
+
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
                             ->stripCharacters('.')
@@ -118,35 +115,48 @@ class ProductionResource extends Resource
                             })
                             ->debounce(600)
                             ->required(),
-                        DatePicker::make('date_start')->native(false)
-                            ->label('Data inizio')
-                            ->displayFormat('d/m/Y')
-                            ->suffixIcon('heroicon-o-calendar-days')
-                            ->required(),
-                        DatePicker::make('date_end')->native(false)
-                            ->label('Data fine')
-                            ->displayFormat('d/m/Y')
-                            ->after('date_start')
-                            ->suffixIcon('heroicon-o-calendar-days')
-                            ->required(),
-                        Select::make('status')->label('Stato')
-                            ->options([
-                                'fatturato'=>'FATTURATO',
-                                'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
-                                'stimato'=>'STIMATO',
-                                'in corso'=>'IN CORSO',
-                            ])
-                            ->required(),
+
+
                         TextInput::make('imponibile')
                         ->prefix('€')
                         ->readOnly()
 
-                        ->live()
+                        ->live(),
+                        MarkdownEditor::make('note')->label('Note')->columnSpanFull(),
 
 
-                    ])->columnSpan(1)->inlineLabel()
-                //
-            ]);
+
+
+                ])->columns(4)->columnSpan(2),
+                Group::make()
+                ->schema([
+                    Section::make('Dettagli')
+                        ->schema([
+                            Select::make('status')->label('Stato')
+                                ->options([
+                                    'fatturato'=>'FATTURATO',
+                                    'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
+                                    'stimato'=>'STIMATO',
+                                    'in corso'=>'IN CORSO',
+                                ])
+                                ->required(),
+                            DatePicker::make('date_start')->native(false)
+                                ->label('Data inizio')
+                                ->displayFormat('d/m/Y')
+                                ->suffixIcon('heroicon-o-calendar-days')
+                                ->required(),
+                            DatePicker::make('date_end')->native(false)
+                                ->label('Data fine')
+                                ->displayFormat('d/m/Y')
+                                ->after('date_start')
+                                ->suffixIcon('heroicon-o-calendar-days')
+                                ->required(),
+                            Forms\Components\FileUpload::make('allegati')
+                        ]),
+
+                ])->columnSpan(1)
+
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table

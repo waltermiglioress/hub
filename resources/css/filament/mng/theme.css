@@ -9,3 +9,36 @@
     @apply flex h-full items-center justify-center bg-primary-600 dark:bg-primary-500 rounded-r-full shadow-inner text-xs font-bold text-white;
 }
 
+.mng-wdg-prd span,div {
+    @apply !text-gray-50
+}
+.mng-wip-card{
+    @apply bg-primary-600
+}
+.mng-est-card{
+    @apply bg-purple-600
+}
+.mng-cont-card{
+    @apply bg-orange-500
+}
+.mng-inv-card{
+    @apply bg-emerald-500
+}
+
+.fi-sidebar-nav,.fi-sidebar-header{
+    @apply bg-primary-600
+}
+
+.fi-sidebar-item-label,.fi-sidebar-group-label {
+    @apply text-gray-100
+}
+
+.fi-sidebar-item-active > a > span, span:hover {
+    @apply text-primary-500
+}
+
+.fi-sidebar-item > a:hover > span {
+    @apply text-primary-500
+}
+
+
