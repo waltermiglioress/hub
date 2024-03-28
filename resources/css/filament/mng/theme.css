@@ -8,3 +8,4 @@
 .progress-bar-value {
     @apply flex h-full items-center justify-center bg-primary-600 dark:bg-primary-500 rounded-r-full shadow-inner text-xs font-bold text-white;
 }
+

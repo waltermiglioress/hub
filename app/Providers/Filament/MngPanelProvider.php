@@ -45,6 +45,10 @@ class MngPanelProvider extends PanelProvider
                 'estimated' => Color::Purple,
             ])
             ->brandName('Sicilsaldo Group')
+//            ->brandLogo(fn () => view('filament.admin.logo'))
+
+//            ->brandLogoHeight('8rem')
+            ->favicon(asset('image/logo.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

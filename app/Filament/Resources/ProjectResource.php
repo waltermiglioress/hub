@@ -39,6 +39,9 @@ class ProjectResource extends Resource
                 TextInput::make('code')
                     ->label('Codice commessa')
                     ->required(),
+                TextInput::make('code_ind')
+                    ->label('Codice industriale')
+                    ->required(),
                 TextInput::make('desc')
                     ->label('Descrizione')
                     ->required(),
@@ -52,6 +55,10 @@ class ProjectResource extends Resource
                     ])
                     ->inline()
                     ->required(),
+                TextInput::make('value')
+                    ->label('Valore contrattuale')
+                ->numeric(),
+
                 Select::make('group')
                     ->label('Gruppo')
                     ->options([
@@ -84,6 +91,8 @@ class ProjectResource extends Resource
             ->columns([
                 TextColumn::make('code')
                 ->label('Codice'),
+                TextColumn::make('code_ind')
+                    ->label('Codice Industriale'),
                 TextColumn::make('group')
                 ->label('Gruppo'),
                 TextColumn::make('desc')
@@ -91,6 +100,9 @@ class ProjectResource extends Resource
                     ->wrap(),
                 TextColumn::make('contract')
                     ->label('N. Contratto'),
+                TextColumn::make('value')
+                    ->label('Valore')
+                    ->money('euro'),
                 IconColumn::make('status')
                     ->label('Stato')
                     ->boolean()
