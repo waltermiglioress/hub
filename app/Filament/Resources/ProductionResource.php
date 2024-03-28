@@ -240,6 +240,7 @@ class ProductionResource extends Resource
 
 
                 SelectFilter::make('client.name')->label('Cliente')
+                    ->preload()
                 ->searchable(),
                 Filter::make('created_at')
                     ->form([
