@@ -7,6 +7,8 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -107,13 +109,24 @@ class UserResource extends Resource
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
-                    ->searchable(),
-                Select::make('projects')
+                    ->searchable()
+                    ->required(),
+                CheckboxList::make('projects')
                     ->relationship('projects','code')
                     ->label('Commesse')
+                    ->selectAllAction(
+                        fn (Action $action) => $action->label('Seleziona tutto'))
+                    ->columnSpanFull()->columns(6)
+                    ->bulkToggleable()
                     ->searchable()
-                    ->preload()
-                    ->multiple()
+                    ->required(),
+//                Select::make('projects')
+//                    ->relationship('projects','code')
+//                    ->label('Commesse')
+//                    ->searchable()
+//                    ->preload()
+//                    ->multiple()
+//                    ->required(),
             ]);
     }
 

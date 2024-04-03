@@ -36,6 +36,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'city_id',
         'cap',
         'password',
+        'project_id',
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'project_id' => 'array',
     ];
 
     public function canAccessPanel(Panel $panel): bool

@@ -25,20 +25,20 @@ div.mng-wdg-prd *{
     @apply bg-emerald-500
 }
 
-.fi-sidebar-nav,.fi-sidebar-header{
-    @apply bg-primary-600
-}
+/*.fi-sidebar-nav,.fi-sidebar-header{*/
+/*    @apply bg-primary-600*/
+/*}*/
 
-.fi-sidebar-item-label,.fi-sidebar-group-label, .fi-logo {
-    @apply text-gray-100
-}
+/*.fi-sidebar-item-label,.fi-sidebar-group-label, .fi-logo {*/
+/*    @apply text-gray-100*/
+/*}*/
 
-.fi-sidebar-item-active > a > span, span:hover {
-    @apply text-primary-500
-}
+/*.fi-sidebar-item-active > a > span, span:hover {*/
+/*    @apply text-primary-500*/
+/*}*/
 
-.fi-sidebar-item > a:hover > span {
-    @apply text-primary-500
-}
+/*.fi-sidebar-item > a:hover > span {*/
+/*    @apply text-primary-500*/
+/*}*/
 
 
