@@ -15,6 +15,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Support\Assets\Js;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
@@ -101,7 +102,7 @@ class ProductionResource extends Resource
                             })
                             ->debounce(600)
                             ->required(),
-
+                        JS::make('',''),
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
                             ->stripCharacters('.')
