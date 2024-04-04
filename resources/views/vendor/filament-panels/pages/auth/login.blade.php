@@ -1,7 +1,7 @@
 
 <div class="bg-white w-full h-screen dark:bg-gray-900">
     <div class="flex justify-center h-screen">
-        <div class="ins-login-img hidden bg-cover lg:block lg:w-80" style="background-image:url({{asset('image/bg_login.jpg')}})">
+        <div class="ins-login-img hidden bg-cover lg:block lg:w-80" style="background-image:url({{asset('image/bg_login.JPG')}})">
 {{--            <div class="flex items-center w-full h-full px-20 bg-gray-900 bg-black/50">--}}
                 <div class="ins-login-wrapper">
                     <h2 >Insider - Sicilsaldo Group</h2>
