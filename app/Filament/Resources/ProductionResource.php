@@ -15,6 +15,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Support\Assets\Js;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\RawJs;
@@ -66,9 +67,6 @@ class ProductionResource extends Resource
                 Section::make('Parte generale')
                     ->description('Descrizione della parte generale')
                     ->schema([
-                        Select::make('client_id')->label('Cliente')
-                            ->relationship('client','name')
-                            ->required(),
                         Select::make('project_id')
                             ->label('Commessa')
                             ->options(Project::whereHas('users',function ($query){
@@ -81,7 +79,14 @@ class ProductionResource extends Resource
 //                                'code',
 //                                fn (Builder $query)=>$query->whereBelongsTo('user','user','true'))
                             ->required(),
-                        TextInput::make('desc')->label('Descrizione attività')->columnSpan(2),
+
+                        Select::make('client_id')->label('Cliente')
+                            ->relationship('client','name')
+                            ->required(),
+                        TextInput::make('desc')
+                            ->label('Breve descrizione attività')
+                            ->maxLength(50)
+                            ->columnSpan(2),
                         TextInput::make('type')
                             ->datalist([
                                 'SAL',
@@ -102,7 +107,7 @@ class ProductionResource extends Resource
                             })
                             ->debounce(600)
                             ->required(),
-                        JS::make('',''),
+
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
                             ->stripCharacters('.')

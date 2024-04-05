@@ -61,3 +61,6 @@ div.mng-wdg-prd *{
 .ins-login-wrapper > p{
     @apply   text-gray-100 lg:pr-48;
 }
+.login-logo >img{
+    @apply mb-8
+}

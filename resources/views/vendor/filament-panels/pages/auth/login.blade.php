@@ -13,6 +13,9 @@
 
         <div class="flex items-center w-full max-w-md px-6 mx-auto w-1/4">
             <div class="flex-1">
+                <div class="login-logo">
+                    <img class="mx-auto w-32" src="{{asset('image/logo.png')}}" alt=""/>
+                </div>
                 <div class="text-center">
                     <h2 class="text-4xl font-bold text-center text-gray-700 dark:text-white">Insider - Platform</h2>
 
@@ -20,6 +23,13 @@
                 </div>
 
                 <div class="mt-8">
+{{--                    @if (filament()->hasRegistration())--}}
+{{--                        <x-slot name="subheading">--}}
+{{--                            {{ __('filament-panels::pages/auth/login.actions.register.before') }}--}}
+
+{{--                            {{ $this->registerAction }}--}}
+{{--                        </x-slot>--}}
+{{--                    @endif--}}
                     <x-filament-panels::form wire:submit="authenticate">
                         {{ $this->form }}
 

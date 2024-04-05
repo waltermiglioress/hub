@@ -9,6 +9,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -16,6 +17,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,9 +57,15 @@ class UserResource extends Resource
                     ->required()
                     ->numeric()
                     ->label('Mobile'),
-                TextInput::make('avatar')
-                    ->nullable()
-                    ->label('Avatar'),
+                FileUpload::make('avatar')
+                       ->label('Logo')
+                       ->disk('public')
+                       ->directory('')
+                       ->image()
+                       ->avatar()
+                       ->openable()
+                       ->imageEditor()
+                       ->circleCropper(),
                 TextInput::make('cf')
                     ->nullable()
                     ->label('Codice fiscale'),
@@ -134,6 +142,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('avatar')
+                    ->circular(),
                 TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
@@ -143,6 +153,20 @@ class UserResource extends Resource
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
+                TextColumn::make('roles.name')
+                    ->badge()
+                    ->color('success')
+                    ->label('Ruolo'),
+                TextColumn::make('tel')
+                    ->label('Mobile')
+                    ->searchable(),
+                TextColumn::make('projects.code')
+                    ->searchable()
+                    ->label('Commesse')
+                    ->badge()
+                    ->expandableLimitedList(true)
+                    ->limitList(25),
+
                 TextColumn::make('created_at')
                     ->label('Data Creazione')
                     ->date('d-m-Y')

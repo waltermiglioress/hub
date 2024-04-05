@@ -65,6 +65,7 @@ class CliForResource extends Resource
                             ->label('Codice Fiscale'),
                         ToggleButtons::make('client')
                             ->label('Tipo Anagrafica')
+                            ->default(0)
                             ->options([
                                 0 => 'Cliente',
                                 1 => 'Fornitore',])

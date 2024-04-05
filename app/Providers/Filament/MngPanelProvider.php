@@ -31,6 +31,8 @@ class MngPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('mng')
+            ->authGuard('web')
+            ->authPasswordBroker('users')
             ->databaseNotifications()
             ->path('mng')
             ->login()
