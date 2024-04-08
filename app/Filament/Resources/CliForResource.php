@@ -58,6 +58,7 @@ class CliForResource extends Resource
                             ->columnSpan(2),
                         TextInput::make('piva')
                             ->label('P.IVA')
+                            ->unique()
                             ->numeric()
                             ->maxLength(11)
                             ->required(),
@@ -65,7 +66,7 @@ class CliForResource extends Resource
                             ->label('Codice Fiscale'),
                         ToggleButtons::make('client')
                             ->label('Tipo Anagrafica')
-                            ->default(0)
+                            ->default(1)
                             ->options([
                                 0 => 'Cliente',
                                 1 => 'Fornitore',])
