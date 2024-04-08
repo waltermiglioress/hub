@@ -16,15 +16,15 @@ return new class extends Migration
             $table->char('firstname');
             $table->char('lastname');
             $table->string('tel')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->nullable()->unique();
             $table->char('avatar')->nullable();
             $table->char('CF')->unique()->nullable();
             $table->string('address')->nullable();
-            $table->foreignId('country_id')->constrained();
-            $table->foreignId('state_id')->constrained();
-            $table->foreignId('city_id')->constrained();
+            $table->foreignId('country_id')->nullable()->constrained();
+            $table->foreignId('state_id')->nullable()->constrained();
+            $table->foreignId('city_id')->nullable()->constrained();
             $table->string('cap')->nullable();
-            $table->foreignId('clifor_id')->constrained('cli_fors','id');
+            $table->foreignId('clifor_id')->nullable()->constrained('cli_fors','id');
             $table->timestamps();
         });
     }

@@ -52,7 +52,6 @@ class PeopleResource extends Resource
 
                         TextInput::make('CF')
                             ->label('Codice Fiscale')
-                            ->required()
                             ->unique(),
 
 
@@ -67,8 +66,7 @@ class PeopleResource extends Resource
                                     ->afterStateUpdated(function (Set $set){
                                         $set('state_id',null);
                                         $set('city_id',null);
-                                    })
-                                    ->required(),
+                                    }),
                                 Select::make('state_id')
                                     ->label('Regione/Provincia')
                                     ->options(fn(Get $get): Collection =>State::query()
@@ -78,8 +76,7 @@ class PeopleResource extends Resource
                                     ->searchable()
                                     ->live()
                                     ->afterStateUpdated(fn(Set $set) => $set('city_id',null))
-                                    ->preload()
-                                    ->required(),
+                                    ->preload(),
 
                                 Select::make('city_id')
                                     ->label('Città')
@@ -88,8 +85,7 @@ class PeopleResource extends Resource
                                         ->pluck('name','id'))
                                     ->searchable()
                                     ->preload()
-                                    ->live()
-                                    ->required(),
+                                    ->live(),
                                 TextInput::make('cap')
                                     ->label('CAP')
                                     ->numeric(),
@@ -115,7 +111,9 @@ class PeopleResource extends Resource
                         ->tel(),
                     TextInput::make('email')
                         ->label('Email')
-                        ->email(),
+                        ->email()
+                        ->unique()
+                        ->required(),
                     Select::make('clifor_id')
                         ->label('Presso')
                         ->relationship('clifor','name')
