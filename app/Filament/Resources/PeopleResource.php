@@ -18,7 +18,11 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -126,7 +130,28 @@ class PeopleResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\Layout\Stack::make([
+//                    Split::make([
+                        ImageColumn::make('avatar')
+                            ->defaultImageUrl(url('/image/placeholder-people.png'))
+                            ->height('25%')
+                            ->circular(),
+                        TextColumn::make('firstname')
+                            ->weight(FontWeight::Bold)
+                            ->searchable()
+                            ->sortable(),
+                        TextColumn::make('lastname')
+                            ->weight(FontWeight::Bold)
+                            ->searchable()
+                            ->sortable(),
+                        TextColumn::make('email'),
+//                    ])
+                ]),
+
+            ])
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
             ->filters([
                 //
