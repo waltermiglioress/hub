@@ -17,6 +17,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProjectResource extends Resource
@@ -80,7 +81,8 @@ class ProjectResource extends Resource
                 Select::make('responsible_id')
                     ->label('Responsabile')
                     ->relationship('manager','firstname')
-                    ->searchable(),
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->firstname} {$record->lastname}")
+                    ->searchable(['firstname', 'lastname']),
 
             ]);
     }
