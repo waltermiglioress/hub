@@ -38,7 +38,7 @@ class ProductionOverview extends BaseWidget
                 return Number::format($number / 1000, 2) . 'k';
             }
 
-            return Number::format($number / 1000000, 2) . 'm';
+            return Number::format($number / 1000000, 2) . 'Mln';
         };
 
         return [

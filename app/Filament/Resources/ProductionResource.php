@@ -69,9 +69,9 @@ class ProductionResource extends Resource
                     ->schema([
                         Select::make('project_id')
                             ->label('Commessa')
-                            ->options(Project::whereHas('users',function ($query){
-                                $query->where('user_id',Auth::id());
-                            })->pluck('code','id'))
+                            ->options(Project::whereHas('users', function ($query) {
+                                $query->where('user_id', Auth::id());
+                            })->pluck('code', 'id'))
                             ->searchable()
                             ->preload()
 //                            ->relationship(
@@ -81,7 +81,7 @@ class ProductionResource extends Resource
                             ->required(),
 
                         Select::make('client_id')->label('Cliente')
-                            ->relationship('client','name')
+                            ->relationship('client', 'name')
                             ->required(),
                         TextInput::make('desc')
                             ->label('Breve descrizione attività')
@@ -100,67 +100,66 @@ class ProductionResource extends Resource
                             ->label('Percentuale')
                             ->suffix('%')
                             ->numeric()
+
                             ->maxValue(100)
-                            ->afterStateUpdated(function (Set $set,$get, $state){
-                                $calc=(int)$get('value')*($state/100);
-                                $set('imponibile',$calc);
+                            ->afterStateUpdated(function (Set $set, $get, $state) {
+                                $calc = (int)$get('value') * ($state / 100);
+                                $set('imponibile', $calc);
                             })
                             ->debounce(600)
                             ->required(),
 
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters('.')
+//                            ->stripCharacters('.')
                             ->live()
+                            ->step("any")
                             ->numeric()
                             ->prefix('€')
                             ->label('Valore produzione')
-                            ->afterStateUpdated(function (Set $set,$get, $state){
-                                $calc=(int)$get('percentage')*($state/100);
-                                $set('imponibile',$calc);
+                            ->afterStateUpdated(function (Set $set, $get, $state) {
+                                $calc = (int)$get('percentage') * ($state / 100);
+                                $set('imponibile', $calc);
                             })
                             ->debounce(600)
                             ->required(),
 
 
                         TextInput::make('imponibile')
-                        ->prefix('€')
-                        ->readOnly()
-
-                        ->live(),
+                            ->prefix('€')
+                            ->readOnly()
+                            ->live(),
                         MarkdownEditor::make('note')->label('Note')->columnSpanFull(),
 
 
-
-
-                ])->columns(4)->columnSpan(2),
+                    ])->columns(4)->columnSpan(2),
                 Group::make()
-                ->schema([
-                    Section::make('Dettagli')
-                        ->schema([
-                            Select::make('status')->label('Stato')
-                                ->options([
-                                    'fatturato'=>'FATTURATO',
-                                    'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
-                                    'stimato'=>'STIMATO',
-                                    'in corso'=>'IN CORSO',
-                                ])
-                                ->required(),
-                            DatePicker::make('date_start')->native(false)
-                                ->label('Data inizio')
-                                ->displayFormat('d/m/Y')
-                                ->suffixIcon('heroicon-o-calendar-days')
-                                ->required(),
-                            DatePicker::make('date_end')->native(false)
-                                ->label('Data fine')
-                                ->displayFormat('d/m/Y')
-                                ->after('date_start')
-                                ->suffixIcon('heroicon-o-calendar-days')
-                                ->required(),
-                            Forms\Components\FileUpload::make('allegati')
-                        ]),
+                    ->schema([
+                        Section::make('Dettagli')
+                            ->schema([
+                                Select::make('status')->label('Stato')
+                                    ->options([
+                                        'fatturato' => 'FATTURATO',
+                                        'contabilizzato e non ft' => 'CONTABILIZZATO E NON FATTURATO',
+                                        'stimato' => 'STIMATO',
+                                        'in corso' => 'IN CORSO',
+                                    ])
+                                    ->required(),
+                                DatePicker::make('date_start')->native(false)
+                                    ->label('Data inizio')
+                                    ->displayFormat('d/m/Y')
+                                    ->suffixIcon('heroicon-o-calendar-days')
+                                    ->required(),
+                                DatePicker::make('date_end')->native(false)
+                                    ->label('Data fine')
+                                    ->displayFormat('d/m/Y')
+                                    ->after('date_start')
+                                    ->suffixIcon('heroicon-o-calendar-days')
+                                    ->required(),
+                                Forms\Components\FileUpload::make('allegati')
+                            ]),
 
-                ])->columnSpan(1)
+                    ])->columnSpan(1)
 
             ])->columns(3);
     }

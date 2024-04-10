@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Production extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'desc',
         'type',
@@ -26,10 +27,17 @@ class Production extends Model
 
     ];
 
-    public function client(): belongsTo {
+    protected $casts = [
+        "value" => "float"
+    ];
+
+    public function client(): belongsTo
+    {
         return $this->belongsTo(CliFor::class);
     }
-    public function project(): belongsTo {
+
+    public function project(): belongsTo
+    {
         return $this->belongsTo(Project::class);
     }
 }
