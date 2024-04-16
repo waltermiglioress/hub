@@ -58,14 +58,14 @@ class UserResource extends Resource
                     ->numeric()
                     ->label('Mobile'),
                 FileUpload::make('avatar')
-                       ->label('Logo')
-                       ->disk('public')
-                       ->directory('')
-                       ->image()
-                       ->avatar()
-                       ->openable()
-                       ->imageEditor()
-                       ->circleCropper(),
+                    ->label('Logo')
+                    ->preserveFilenames()
+                    ->disk('avatar')
+                    ->image()
+                    ->avatar()
+                    ->openable()
+                    ->imageEditor()
+                    ->circleCropper(),
                 TextInput::make('cf')
                     ->nullable()
                     ->label('Codice fiscale'),

@@ -100,7 +100,6 @@ class ProductionResource extends Resource
                             ->label('Percentuale')
                             ->suffix('%')
                             ->numeric()
-
                             ->maxValue(100)
                             ->afterStateUpdated(function (Set $set, $get, $state) {
                                 $calc = (int)$get('value') * ($state / 100);
@@ -112,16 +111,15 @@ class ProductionResource extends Resource
                         TextInput::make('value')
                             //->mask(RawJs::make('$money($input)'))
 //                            ->stripCharacters('.')
-                            ->live()
+                            ->live(debounce: 600)
                             ->step("any")
                             ->numeric()
                             ->prefix('€')
                             ->label('Valore produzione')
-                            ->afterStateUpdated(function (Set $set, $get, $state) {
+                            ->afterStateUpdated(callback: function (Set $set, $get, $state) {
                                 $calc = (int)$get('percentage') * ($state / 100);
                                 $set('imponibile', $calc);
                             })
-                            ->debounce(600)
                             ->required(),
 
 
@@ -171,25 +169,26 @@ class ProductionResource extends Resource
                 TextColumn::make('project.code')->label('Commessa')->searchable()->sortable(),
                 TextColumn::make('client.name')->label('Cliente')->searchable()->sortable(),
                 TextColumn::make('desc')->label('Descrizione')->words(10)->wrap(),
-                ColumnGroup::make('Date',[
+                ColumnGroup::make('Date', [
                     TextColumn::make('date_start')->date('d/m/Y')->label('Data inizio'),
                     TextColumn::make('date_end')->date('d/m/Y')->label('Data fine'),
                 ])->alignment(Alignment::Center)
                     ->wrapHeader(),
                 TextColumn::make('type')->label('Identificativo')->searchable(),
-                ColumnGroup::make('Valori',[
+                ColumnGroup::make('Valori', [
                     TextColumn::make('value')->label('Valore')
-                        ->money('eur',true)
+                        ->money('eur', true)
                         ->sortable()
                         ->summarize(
                             Sum::make()->label('Totale')->money('EUR')
                         ),
                     ProgressColumn::make('percentage')
-                        ->label('Percentuale'),
+                        ->label('Percentuale')
+                        ->sortable(),
 
                     TextColumn::make('imponibile')
                         ->label('Imponibile')
-                        ->money('eur',true)->sortable()
+                        ->money('eur', true)->sortable()
                         ->summarize(
                             Sum::make()->label('Totale')->money('EUR'))
                 ])->alignment(Alignment::Center)
@@ -204,20 +203,21 @@ class ProductionResource extends Resource
 //                        'in corso'=>'IN CORSO',
 //                    ]),
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'fatturato' => 'success',
                         'contabilizzato e non ft' => 'warning',
                         'stimato' => 'estimated',
-                        'in corso'=>'primary',
+                        'in corso' => 'primary',
                     }),
 
-                TextColumn::make('updated_at')->dateTime('d/m/y H:i','Europe/Rome')->label('Ultimo aggiornamento'),
+                TextColumn::make('updated_at')->dateTime('d/m/y H:i', 'Europe/Rome')->label('Ultimo aggiornamento'),
 
 
 //                TextColumn::make('ft')->label('Fattura')
 //                    ->searchable()->sortable(),
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
+            ->deferLoading()
 
 //            ->groups([
 //                'status',
@@ -230,23 +230,23 @@ class ProductionResource extends Resource
                     ->label('Stato')
                     ->multiple()
                     ->options([
-                        'fatturato'=>'FATTURATO',
-                        'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
-                        'stimato'=>'STIMATO',
-                        'in corso'=>'IN CORSO',
+                        'fatturato' => 'FATTURATO',
+                        'contabilizzato e non ft' => 'CONTABILIZZATO E NON FATTURATO',
+                        'stimato' => 'STIMATO',
+                        'in corso' => 'IN CORSO',
                     ]),
                 SelectFilter::make('project_id')
                     ->label('Commessa')
-                    ->options(Project::whereHas('users',function ($query){
-                        $query->where('user_id',Auth::id());
-                    })->pluck('code','id'))
+                    ->options(Project::whereHas('users', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })->pluck('code', 'id'))
                     ->searchable()
                     ->preload(),
 
 
                 SelectFilter::make('client_id')->label('Cliente')
                     ->preload()
-                    ->relationship('client','name')
+                    ->relationship('client', 'name')
                     ->searchable(),
                 Filter::make('created_at')
                     ->form([
@@ -257,14 +257,14 @@ class ProductionResource extends Resource
                         return $query
                             ->when(
                                 $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('date_start', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('date_start', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('date_end', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('date_end', '<=', $date),
                             );
                     })
-            ],layout: FiltersLayout::AboveContent)
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -308,7 +308,7 @@ class ProductionResource extends Resource
     public static function getEloquentQuery(): Builder
     {
 
-        return parent::getEloquentQuery()->whereIn('project_id',auth()->user()->projects()->pluck('id'));
+        return parent::getEloquentQuery()->whereIn('project_id', auth()->user()->projects()->pluck('id'));
     }
 
 }
