@@ -26,7 +26,7 @@ class ProductionExporter extends Exporter
         return [
             ExportColumn::make('id')
                 ->label('ID'),
-            ExportColumn::make('project_id')
+            ExportColumn::make('project.code')
             ->label('Commessa'),
             ExportColumn::make('desc'),
             ExportColumn::make('type'),

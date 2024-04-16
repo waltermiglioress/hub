@@ -18,6 +18,7 @@ use Filament\Forms\Set;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Support\Assets\Js;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\IconPosition;
 use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
@@ -218,7 +219,7 @@ class ProductionResource extends Resource
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
             ->deferLoading()
-            ->paginated([10, 25, 50, 100])
+            ->paginated([10, 25, 50, 100,'all'])
             ->defaultPaginationPageOption(25)
 
 //            ->groups([
@@ -267,6 +268,12 @@ class ProductionResource extends Resource
                             );
                     })
             ], layout: FiltersLayout::AboveContent)
+            ->deferFilters()
+            ->filtersApplyAction(
+                fn (Action $action) => $action
+                    ->button()
+                    ->label('Applica filtri'),
+            )
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
