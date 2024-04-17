@@ -220,7 +220,7 @@ class ProductionResource extends Resource
             ])
             ->deferLoading()
             ->paginated(false)
-//            ->defaultPaginationPageOption(25)
+            ->defaultPaginationPageOption(50)
 
 //            ->groups([
 //                'status',
