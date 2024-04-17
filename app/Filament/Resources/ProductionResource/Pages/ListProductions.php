@@ -7,6 +7,7 @@ use Filament\Actions;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListProductions extends ListRecords
@@ -20,6 +21,7 @@ class ListProductions extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
 
 
     protected function getHeaderWidgets(): array
