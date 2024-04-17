@@ -219,8 +219,8 @@ class ProductionResource extends Resource
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
             ->deferLoading()
-            ->paginated([10, 25, 50, 100,'all'])
-            ->defaultPaginationPageOption(25)
+            ->paginated(false)
+//            ->defaultPaginationPageOption(25)
 
 //            ->groups([
 //                'status',
