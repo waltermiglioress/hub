@@ -10,12 +10,15 @@ use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -24,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
@@ -41,22 +45,6 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Nome'),
-                TextInput::make('surname')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Cognome'),
-                TextInput::make('email')
-                    ->required()
-                    ->unique()
-                    ->email()
-                    ->label('Email'),
-                TextInput::make('tel')
-                    ->numeric()
-                    ->label('Mobile'),
                 FileUpload::make('avatar')
                     ->label('Logo')
                     ->preserveFilenames()
@@ -65,67 +53,118 @@ class UserResource extends Resource
                     ->avatar()
                     ->openable()
                     ->imageEditor()
-                    ->circleCropper(),
-                TextInput::make('cf')
-                    ->nullable()
-                    ->label('Codice fiscale'),
-                Select::make('country_id')
-                    ->label('Paese')
-                    ->relationship('country','name')
-                    ->searchable()
-                    ->preload()
-                    ->live()
-                    ->afterStateUpdated(function (Set $set){
-                        $set('state_id',null);
-                        $set('city_id',null);
-                    }),
-                Select::make('state_id')
-                    ->label('Regione/Provincia')
-                    ->options(fn(Get $get): Collection =>State::query()
-                        ->where('country_id', $get('country_id'))
-                        ->pluck('name','id'))
+                    ->circleCropper()
+                    ->columnSpanFull(),
+                Section::make('Dati Generali')
+                    ->aside()
+                    ->description('Compilare i dati generali dell\'utente ricordando l\'obbligatoriertà dei campi nome,cognome,email,password. Il campo password deve essere un campo alfa numerico di lunghezza minima di 8 caratteri avente un simbolo.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nome'),
+
+                        TextInput::make('surname')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Cognome'),
+                        TextInput::make('email')
+                            ->required()
+                            ->unique()
+                            ->validationMessages([
+                                'unique' => 'Il campo :attribute esiste già!',
+                            ])
+                            ->email()
+                            ->label('Email'),
+                        TextInput::make('tel')
+                            ->numeric()
+                            ->label('Mobile'),
+
+                        TextInput::make('cf')
+                            ->nullable()
+                            ->label('Codice fiscale'),
+                        TextInput::make('password')
+                            ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                            ->dehydrated(fn(?string $state): bool => filled($state))
+                            ->label('Password')
+                            ->rules([Password::min(8)->symbols()->mixedCase()->numbers()])
+//                    ->rules(['alpha_num:ascii','min:8'])
+                            ->validationMessages([
+                                'min' => 'La lunghezza del campo :attribute deve essere di almeno :value.',
+                                'alpha_num:ascii' => 'La :attribute deve avere caratteri alfa numerici',
+                            ])
+                            ->required(fn(string $context): bool => $context === 'create')
+                            ->revealable()
+                            ->password(),
+                    ]),
+
+                Section::make('Indirizzi')
+                    ->description('Inserire i dati relativi l\'anagrafica dell\'utente')
+                    ->columns(2)
+                    ->aside()
+                    ->schema([
+                        Select::make('country_id')
+                            ->label('Paese')
+                            ->relationship('country', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function (Set $set) {
+                                $set('state_id', null);
+                                $set('city_id', null);
+                            }),
+                        Select::make('state_id')
+                            ->label('Regione/Provincia')
+                            ->options(fn(Get $get): Collection => State::query()
+                                ->where('country_id', $get('country_id'))
+                                ->pluck('name', 'id'))
 //                    ->relationship('state','name')
-                    ->searchable()
-                    ->live()
-                    ->afterStateUpdated(fn(Set $set) => $set('city_id',null))
-                    ->preload(),
+                            ->searchable()
+                            ->live()
+                            ->afterStateUpdated(fn(Set $set) => $set('city_id', null))
+                            ->preload(),
 
-                Select::make('city_id')
-                    ->label('Città')
-                    ->options(fn(Get $get): Collection =>City::query()
-                        ->where('state_id', $get('state_id'))
-                        ->pluck('name','id'))
-                    ->searchable()
-                    ->preload()
-                    ->live(),
-                TextInput::make('address')
-                    ->label('Indirizzo'),
-                TextInput::make('cap')
-                    ->label('CAP')
-                    ->numeric(),
+                        Select::make('city_id')
+                            ->label('Città')
+                            ->options(fn(Get $get): Collection => City::query()
+                                ->where('state_id', $get('state_id'))
+                                ->pluck('name', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->live(),
+                        TextInput::make('cap')
+                            ->label('CAP')
+                            ->numeric(),
+                        TextInput::make('address')
+                            ->label('Indirizzo')
+                            ->columnSpanFull(),
+                    ]),
 
-                TextInput::make('password')
-                    ->dehydrateStateUsing(fn(string $state):string => Hash::make($state))
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->label('Password')
-                    ->required(fn (string $context): bool => $context === 'create')
-                    ->password(),
 
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
-                    ->required(),
-                CheckboxList::make('projects')
-                    ->relationship('projects','code')
-                    ->label('Commesse')
-                    ->selectAllAction(
-                        fn (Action $action) => $action->label('Seleziona tutto'))
-                    ->columnSpanFull()->columns(6)
-                    ->bulkToggleable()
-                    ->searchable()
-                    ->required(),
+                Section::make('Dati relativi la piattaforma')
+                    ->description('Inserire il ruolo e assegnare le commesse all\'utente. L\'assegnazione permetterà all\'utente di visionare i dati relativi le proprie commesse.')
+                    ->aside()
+                    ->columns(1)
+                    ->schema([
+                        Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->searchable()
+                            ->required(),
+                        CheckboxList::make('projects')
+                            ->relationship('projects', 'code')
+                            ->label('Commesse')
+                            ->selectAllAction(
+                                fn(Action $action) => $action->label('Seleziona tutto'))
+                            ->columnSpanFull()->columns(6)
+                            ->bulkToggleable()
+                            ->searchable()
+                            ->required(),
+                    ]),
+
+
 //                Select::make('projects')
 //                    ->relationship('projects','code')
 //                    ->label('Commesse')
