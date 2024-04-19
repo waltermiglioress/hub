@@ -10,6 +10,9 @@ use App\Models\Production;
 use App\Models\Project;
 use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
+
+
+use Filament\Actions\ReplicateAction;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
@@ -17,6 +20,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Support\Assets\Js;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\RawJs;
@@ -29,7 +33,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\BadgeColumn;
@@ -218,7 +224,7 @@ class ProductionResource extends Resource
             ])
             ->defaultSort('date_end', 'desc')
             ->deferLoading()
-            ->paginated([10, 25, 50, 100,'all'])
+            ->paginated([10, 25, 50, 100, 'all'])
             ->defaultPaginationPageOption(25)
 
 
@@ -270,12 +276,18 @@ class ProductionResource extends Resource
             ], layout: FiltersLayout::AboveContent)
             ->deferFilters()
             ->filtersApplyAction(
-                fn (Action $action) => $action
+                fn(Action $action) => $action
                     ->button()
                     ->label('Applica filtri'),
             )
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                ])
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->size(ActionSize::Small)
+                    ->color('green'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
