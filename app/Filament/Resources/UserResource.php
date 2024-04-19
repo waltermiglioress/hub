@@ -51,10 +51,10 @@ class UserResource extends Resource
                     ->label('Cognome'),
                 TextInput::make('email')
                     ->required()
+                    ->unique()
                     ->email()
                     ->label('Email'),
                 TextInput::make('tel')
-                    ->required()
                     ->numeric()
                     ->label('Mobile'),
                 FileUpload::make('avatar')
@@ -78,8 +78,7 @@ class UserResource extends Resource
                     ->afterStateUpdated(function (Set $set){
                         $set('state_id',null);
                         $set('city_id',null);
-                    })
-                    ->required(),
+                    }),
                 Select::make('state_id')
                     ->label('Regione/Provincia')
                     ->options(fn(Get $get): Collection =>State::query()
@@ -89,8 +88,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->live()
                     ->afterStateUpdated(fn(Set $set) => $set('city_id',null))
-                    ->preload()
-                    ->required(),
+                    ->preload(),
 
                 Select::make('city_id')
                     ->label('Città')
@@ -99,8 +97,7 @@ class UserResource extends Resource
                         ->pluck('name','id'))
                     ->searchable()
                     ->preload()
-                    ->live()
-                    ->required(),
+                    ->live(),
                 TextInput::make('address')
                     ->label('Indirizzo'),
                 TextInput::make('cap')
@@ -111,6 +108,7 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn(string $state):string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->label('Password')
+                    ->required(fn (string $context): bool => $context === 'create')
                     ->password(),
 
                 Select::make('roles')
