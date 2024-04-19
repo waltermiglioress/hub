@@ -77,6 +77,7 @@ class ProjectResource extends Resource
                     ->required(),
                 Select::make('tender_id')
                     ->label('Gara')
+                    ->nullable()
                     ->relationship('tender','num'),
                 Select::make('responsible_id')
                     ->label('Responsabile')

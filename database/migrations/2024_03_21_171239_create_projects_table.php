@@ -23,7 +23,7 @@ return new class extends Migration
 
 
             $table->foreignId('clifor_id')->constrained('cli_fors','id');
-            $table->foreignId('tender_id')->constrained();
+            $table->foreignId('tender_id')->nullable()->constrained();
             $table->foreignId('responsible_id')->constrained('people','id');
         });
     }
