@@ -116,7 +116,7 @@ class ProductionResource extends Resource
                             ->step("any")
                             ->numeric()
                             ->prefix('€')
-                            ->label('Valore produzione')
+                            ->label('Valore lavorazione')
                             ->afterStateUpdated(callback: function (Set $set, $get, $state) {
                                 $calc = (int)$get('percentage') * ($state / 100);
                                 $set('imponibile', $calc);
@@ -144,16 +144,14 @@ class ProductionResource extends Resource
                                         'in corso' => 'IN CORSO',
                                     ])
                                     ->required(),
-                                DatePicker::make('date_start')->native(false)
+                                DatePicker::make('date_start')
                                     ->label('Data inizio')
                                     ->displayFormat('d/m/Y')
-                                    ->suffixIcon('heroicon-o-calendar-days')
                                     ->required(),
-                                DatePicker::make('date_end')->native(false)
+                                DatePicker::make('date_end')
                                     ->label('Data fine')
                                     ->displayFormat('d/m/Y')
                                     ->after('date_start')
-                                    ->suffixIcon('heroicon-o-calendar-days')
                                     ->required(),
                                 Forms\Components\FileUpload::make('allegati')
                             ]),
@@ -170,7 +168,7 @@ class ProductionResource extends Resource
                 TextColumn::make('project.code')->label('Commessa')->searchable()->sortable(),
                 TextColumn::make('client.name')->label('Cliente')->searchable()->sortable(),
                 TextColumn::make('desc')->label('Descrizione')->words(10)->wrap(),
-                ColumnGroup::make('Date', [
+                ColumnGroup::make('Date lavorazioni', [
                     TextColumn::make('date_start')->date('d/m/Y')->label('Data inizio'),
                     TextColumn::make('date_end')->date('d/m/Y')->label('Data fine'),
                 ])->alignment(Alignment::Center)
@@ -218,8 +216,9 @@ class ProductionResource extends Resource
 //                    ->searchable()->sortable(),
 //                TextColumn::make('date_ft')->label('Data fattura'),
             ])
+            ->defaultSort('date_end', 'desc')
             ->deferLoading()
-            ->paginated([10, 25, 50, 100,'tutti'])
+            ->paginated([10, 25, 50, 100,'all'])
             ->defaultPaginationPageOption(25)
 
 
