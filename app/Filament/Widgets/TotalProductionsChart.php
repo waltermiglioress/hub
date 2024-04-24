@@ -15,25 +15,25 @@ class TotalProductionsChart extends ChartWidget
     protected static ?int $sort = 3;
     protected function getData(): array
     {
-        $data = Trend::model(Production::class)
-            ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
-            )
-            ->perMonth()
-            ->count();
+//        $data = Trend::model(Production::class)
+//            ->between(
+//                start: now()->startOfYear(),
+//                end: now()->endOfYear(),
+//            )
+//            ->perMonth()
+//            ->count();
 
-//        $data= $this->getProductionPerMonth();
+        $data= $this->getProductionPerMonth();
 
         return [
             'datasets' => [
                 [
                     'label' => 'Produzioni',
-                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'data' => $data['productionsPerMonth'],
                 ],
             ],
 
-            'labels' => $data->map(fn (TrendValue $value) => $value->date),
+//            'labels' => ['Feb'],
 
         ];
     }
@@ -48,8 +48,8 @@ class TotalProductionsChart extends ChartWidget
         $now = Carbon::now();
         $productionPerMonth = [];
         for ($month = 1; $month <= 12; $month++) {
-            $count = Production::whereYear('created_at', $now->year)
-                ->whereMonth('created_at', $month)
+            $count = Production::whereYear('date_start', $now->year)
+                ->whereMonth('date_start', $month)
                 ->count();
             $productionPerMonth[$now->month($month)->format('M')] = $count;
 //            dd($productionPerMonth);
