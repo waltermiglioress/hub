@@ -28,7 +28,7 @@ class TotalProductionsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Produzioni',
+                    'label' => 'Produzioni anno corrente',
                     'data' => $data['productionsPerMonth'],
                 ],
             ],
@@ -47,7 +47,7 @@ class TotalProductionsChart extends ChartWidget
     {
         $now = Carbon::now();
         $productionPerMonth = [];
-        for ($month = 1; $month <= 24; $month++) {
+        for ($month = 1; $month <= 12; $month++) {
             $count = Production::whereYear('date_start', $now->year)
                 ->whereMonth('date_start', $month)
                 ->count();
