@@ -71,7 +71,7 @@ class UserResource extends Resource
                             ->label('Cognome'),
                         TextInput::make('email')
                             ->required(fn(string $context): bool => $context === 'create')
-                            ->unique()
+                            ->unique(ignoreRecord: true)
                             ->validationMessages([
                                 'unique' => 'Il campo :attribute esiste già!',
                             ])
