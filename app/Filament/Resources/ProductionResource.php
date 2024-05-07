@@ -292,8 +292,9 @@ class ProductionResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    ExportBulkAction::make()
-                        ->exporter(ProductionExporter::class)
+                    \pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction::make(),
+                    //ExportBulkAction::make()
+                      //  ->exporter(ProductionExporter::class)
                 ])
 
             ])

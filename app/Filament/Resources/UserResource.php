@@ -70,7 +70,7 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->label('Cognome'),
                         TextInput::make('email')
-                            ->required()
+                            ->required(fn(string $context): bool => $context === 'create')
                             ->unique()
                             ->validationMessages([
                                 'unique' => 'Il campo :attribute esiste già!',
