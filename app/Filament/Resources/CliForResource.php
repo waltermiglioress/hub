@@ -58,7 +58,7 @@ class CliForResource extends Resource
                             ->columnSpan(2),
                         TextInput::make('piva')
                             ->label('P.IVA')
-                            ->unique()
+                            ->unique(ignoreRecord: true)
                             ->numeric()
                             ->maxLength(11)
                             ->required(),
