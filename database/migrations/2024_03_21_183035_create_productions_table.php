@@ -24,9 +24,9 @@ return new class extends Migration
             $table->tinyInteger('ft')->nullable();
             $table->date('date_ft')->nullable()->default(now());
             $table->text('note')->nullable();
-            $table->unsignedBigInteger('client');
+            $table->unsignedBigInteger('client_id');
 
-            $table->foreign('client')->references('id')->on('cli_fors');
+            $table->foreign('client_id')->references('id')->on('cli_fors');
             $table->foreignId('project_id')->constrained();
             $table->timestamps();
         });
