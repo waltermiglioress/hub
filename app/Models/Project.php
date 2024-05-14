@@ -17,6 +17,7 @@ class Project extends Model
         'desc',
         'contract',
         'status',
+        'currency',
         'value',
         'user_id',
         'group',

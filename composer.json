@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "ariaieboy/filament-currency": "^1.5",
         "bezhansalleh/filament-shield": "^3.2",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.1.5",

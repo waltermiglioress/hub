@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use Akaunting\Money\Currency;
+use Akaunting\Money\Money;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
@@ -56,33 +58,46 @@ class ProjectResource extends Resource
                     ])
                     ->inline()
                     ->required(),
+                Select::make('currency')
+                    ->label('Valuta')
+                    ->searchable()
+                    ->options(function (): array {
+                        $list = Currency::getCurrencies();
+//                        dd($list);
+                        $currencies = collect($list)->mapWithKeys(function ($item, $key) {
+                            return [$key => $item['name']];
+                        })->toArray();
+
+                        return !empty($currencies) ? $currencies : ['no currencies'];
+                    })
+                    ->noSearchResultsMessage(__('Valuta non trovata')),
                 TextInput::make('value')
                     ->label('Valore contrattuale')
-                ->numeric(),
+                    ->numeric(),
 
                 Select::make('group')
                     ->label('Gruppo')
                     ->options([
-                        'Sicilsaldo'=>'SICILSALDO',
-                        'Nuova Ghizzoni'=>'NUOVA GHIZZONI'
-                        ])
+                        'Sicilsaldo' => 'SICILSALDO',
+                        'Nuova Ghizzoni' => 'NUOVA GHIZZONI'
+                    ])
                     ->required(),
                 Select::make('clifor_id')
                     ->label('Cliente')
-                    ->relationship('clifor','name')
-                    ->createOptionForm(fn(Form $form)=>CliForResource::form($form))
+                    ->relationship('clifor', 'name')
+                    ->createOptionForm(fn(Form $form) => CliForResource::form($form))
                     ->createOptionAction(
-                        fn (Action $action) => $action->modalWidth('5xl'),
+                        fn(Action $action) => $action->modalWidth('5xl'),
                     )
                     ->required(),
                 Select::make('tender_id')
                     ->label('Gara')
                     ->nullable()
-                    ->relationship('tender','num'),
+                    ->relationship('tender', 'num'),
                 Select::make('responsible_id')
                     ->label('Responsabile')
-                    ->relationship('manager','firstname')
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->firstname} {$record->lastname}")
+                    ->relationship('manager', 'firstname')
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->firstname} {$record->lastname}")
                     ->searchable(['firstname', 'lastname']),
 
             ]);
@@ -93,11 +108,11 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('code')
-                ->label('Codice'),
+                    ->label('Codice'),
                 TextColumn::make('code_ind')
                     ->label('Codice Industriale'),
                 TextColumn::make('group')
-                ->label('Gruppo'),
+                    ->label('Gruppo'),
                 TextColumn::make('desc')
                     ->label('Descrizione')
                     ->wrap(),
@@ -105,7 +120,14 @@ class ProjectResource extends Resource
                     ->label('N. Contratto'),
                 TextColumn::make('value')
                     ->label('Valore')
-                    ->money('euro'),
+                    ->money(function (Project $record): Currency {
+                        // Verifica se il record esiste e ha un attributo 'currency' non vuoto
+                        if (!empty($record) && !empty($record->currency)) {
+                            return new Currency($record->currency);
+                        }
+                        // Caso di default: restituisce un oggetto Currency per 'EUR'
+                        return new Currency('EUR');
+                    }),
                 IconColumn::make('status')
                     ->label('Stato')
                     ->boolean()

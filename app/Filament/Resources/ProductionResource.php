@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\CustomExport;
 use App\Filament\Exports\ProductionExporter;
 use App\Filament\Resources\ProductionResource\Pages;
 
@@ -12,6 +13,7 @@ use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
 
 
+use Cassandra\Custom;
 use Filament\Actions\ReplicateAction;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Group;
@@ -292,7 +294,8 @@ class ProductionResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    \pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction::make(),
+                   // \pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction::make(),
+
                     //ExportBulkAction::make()
                       //  ->exporter(ProductionExporter::class)
                 ])
