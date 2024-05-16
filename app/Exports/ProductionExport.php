@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProductionExport implements FromQuery ,  WithHeadings, WithMapping, WithColumnFormatting, WithStyles, ShouldAutoSize
+class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, WithStyles, ShouldAutoSize
 {
 
     protected $query;
@@ -23,6 +23,7 @@ class ProductionExport implements FromQuery ,  WithHeadings, WithMapping, WithCo
         $this->query = $query;
 //        dd($query);
     }
+
     public function query()
     {
         return $this->query;
@@ -52,15 +53,25 @@ class ProductionExport implements FromQuery ,  WithHeadings, WithMapping, WithCo
         $start = new \DateTime($row->date_start);
         $end = new \DateTime($row->date_end);
         $interval = $start->diff($end);
+        // Calcola i mesi basandoti sugli anni e mesi
+        $months = $interval->m + ($interval->y * 12);
 
-        $months = max(1, $interval->m + ($interval->y * 12));
+        // Se ci sono giorni extra, considera se aggiungere un mese
+        if ($interval->d > 0) {
+            $months++;
+        }
+
+        // Mi assicuro di avere almeno un mese
+        $months = max(1, $months);
+//        dd($interval);
+//        $months = max(1, $interval->m + ($interval->y * 12));
 
         for ($i = 0; $i < $months; $i++) {
             $month = $start->format('d/m/Y');
             $rows[] = [
                 $row->desc,
                 $row->type,
-                $row->percentage/100,
+                $row->percentage / 100,
                 $row->value,
                 $row->imponibile,
                 $start->format('d/m/Y'),
@@ -93,7 +104,7 @@ class ProductionExport implements FromQuery ,  WithHeadings, WithMapping, WithCo
     {
         return [
             // Style the first row as bold text.
-            1    => ['font' => ['bold' => true]],
+            1 => ['font' => ['bold' => true]],
 
         ];
     }
