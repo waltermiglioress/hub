@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Production;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
@@ -52,27 +53,23 @@ class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColu
     public function map($row): array
     {
         $rows = [];
-        $start = new \DateTime($row->date_start);
-        $end = new \DateTime($row->date_end);
-        $originalDay = $start->format('d');
+        $start = Carbon::parse($row->date_start);
+        $end = Carbon::parse($row->date_end);
 
-        $months = 1 + (($end->format('Y') - $start->format('Y')) * 12) + ($end->format('m') - $start->format('m'));
-        for ($i = 0; $i < $months; $i++) {
-            //$month = $start->format('d/m/Y');
-            $currentMonth = clone $start;
-            $year = (int)$currentMonth->format('Y');
-            $month = (int)$currentMonth->format('m') + $i;
+        // Crea un array per mantenere tutti i mesi toccati dall'intervallo
+        $currentMonth = $start->copy()->startOfMonth();
+        $endMonth = $end->copy()->startOfMonth();
+        $months = [];
 
-            // Gestisce il cambio di anno e il numero del mese
-            $year += intdiv($month - 1, 12);
-            $month = ($month - 1) % 12 + 1;
+        while ($currentMonth->lessThanOrEqualTo($endMonth)) {
+            $months[] = $currentMonth->copy(); // Aggiungi il mese corrente all'array
+            $currentMonth->addMonth(); // Vai al prossimo mese
 
-            // Calcola il giorno corretto per evitare il problema del salto
-            $day = min($originalDay, (int)(new DateTime("$year-$month-01"))->format('t'));
-            $currentMonth->setDate($year, $month, $day);
+        }
+        Log::info('Dopo il while months: '.$currentMonth);
+        foreach ($months as $month) {
 
-
-            $imponibileMensile = $row->imponibile / $months;
+            $imponibileMensile = $row->imponibile / count($months);
 
 
             $rows[] = [
@@ -88,7 +85,7 @@ class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColu
                 $row->status,
                 $row->client->name,
                 $row->project->code_ind,
-                $currentMonth->format('Y-m'),
+                $month->format('d/m/Y'),
                 $imponibileMensile
             ];
 
