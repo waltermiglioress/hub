@@ -2,30 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Exports\CustomExport;
-use App\Filament\Exports\ProductionExporter;
+use App\Exports\ProductionExport;
+use App\Filament\Actions\ExportProdPeriod;
 use App\Filament\Resources\ProductionResource\Pages;
 
-use App\Filament\Resources\ProductionResource\Widgets\ProductionOverview;
+use App\Http\Controllers\ProductionController;
 use App\Models\Production;
 use App\Models\Project;
-use App\Models\User;
 use App\Tables\Columns\ProgressColumn;
 
 
-use Cassandra\Custom;
-use Filament\Actions\ReplicateAction;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Support\Assets\Js;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\IconPosition;
-use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -36,13 +27,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ExportAction;
-use Filament\Tables\Actions\ExportBulkAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ColumnGroup;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -50,11 +38,13 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-use Illuminate\Foundation\Testing\Concerns\InteractsWithContainer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductionResource extends Resource
 {
@@ -228,14 +218,6 @@ class ProductionResource extends Resource
             ->deferLoading()
             ->paginated([10, 25, 50, 100, 'all'])
             ->defaultPaginationPageOption(25)
-
-
-//            ->groups([
-//                'status',
-//                'type',
-//            ])
-//            ->defaultGroup('status')
-
             ->filters([
                 SelectFilter::make('status')
                     ->label('Stato')
@@ -253,7 +235,6 @@ class ProductionResource extends Resource
                     })->pluck('code', 'id'))
                     ->searchable()
                     ->preload(),
-
 
                 SelectFilter::make('client_id')->label('Cliente')
                     ->preload()
@@ -294,13 +275,20 @@ class ProductionResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                   // \pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction::make(),
-
-                    //ExportBulkAction::make()
-                      //  ->exporter(ProductionExporter::class)
-                ])
+                    BulkAction::make('export')
+                        ->label('Esporta selezionati')
+                        ->action(function (Collection $records) {
+                            $ids = $records->pluck('id')->join(',');
+                            Log::info("IDs received from bulk: " . $ids);
+                            $c= new ProductionController();// Estrai gli ID e uniscili in una stringa separata da virgole
+                            return $c->export(new Request(['ids'=>$ids]));
+                        })
+                        ->visible(fn()=> auth()->user()->hasRole('reporting-admin'))
+                        ->icon('heroicon-o-arrow-down-tray')
+                ]),
 
             ])
+            ->selectCurrentPageOnly()
             ->emptyStateHeading('Nessuna produzione')
             ->emptyStateIcon('heroicon-o-currency-euro')
             ->emptyStateDescription('Aggiungi una nuova produzione da fatturare o non ancora bla bla bla')
@@ -328,7 +316,6 @@ class ProductionResource extends Resource
             'edit' => Pages\EditProduction::route('/{record}/edit'),
         ];
     }
-
 
     public static function getEloquentQuery(): Builder
     {
