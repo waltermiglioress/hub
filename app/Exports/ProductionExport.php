@@ -3,7 +3,9 @@
 namespace App\Exports;
 
 use App\Models\Production;
+use DateTime;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -52,22 +54,27 @@ class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColu
         $rows = [];
         $start = new \DateTime($row->date_start);
         $end = new \DateTime($row->date_end);
-        $interval = $start->diff($end);
-        // Calcola i mesi basandoti sugli anni e mesi
-        $months = $interval->m + ($interval->y * 12);
+        $originalDay = $start->format('d');
 
-        // Se ci sono giorni extra, considera se aggiungere un mese
-        if ($interval->d > 0) {
-            $months++;
-        }
-
-        // Mi assicuro di avere almeno un mese
-        $months = max(1, $months);
-//        dd($interval);
-//        $months = max(1, $interval->m + ($interval->y * 12));
-
+        $months = 1 + (($end->format('Y') - $start->format('Y')) * 12) + ($end->format('m') - $start->format('m'));
         for ($i = 0; $i < $months; $i++) {
-            $month = $start->format('d/m/Y');
+            //$month = $start->format('d/m/Y');
+            $currentMonth = clone $start;
+            $year = (int)$currentMonth->format('Y');
+            $month = (int)$currentMonth->format('m') + $i;
+
+            // Gestisce il cambio di anno e il numero del mese
+            $year += intdiv($month - 1, 12);
+            $month = ($month - 1) % 12 + 1;
+
+            // Calcola il giorno corretto per evitare il problema del salto
+            $day = min($originalDay, (int)(new DateTime("$year-$month-01"))->format('t'));
+            $currentMonth->setDate($year, $month, $day);
+
+
+            $imponibileMensile = $row->imponibile / $months;
+
+
             $rows[] = [
                 $row->desc,
                 $row->type,
@@ -81,10 +88,10 @@ class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColu
                 $row->status,
                 $row->client->name,
                 $row->project->code_ind,
-                $month,
-                $row->imponibile / $months
+                $currentMonth->format('Y-m'),
+                $imponibileMensile
             ];
-            $start->modify('+1 month');
+
         }
 
         return $rows;
