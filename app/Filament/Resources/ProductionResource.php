@@ -283,7 +283,7 @@ class ProductionResource extends Resource
                             $c= new ProductionController();// Estrai gli ID e uniscili in una stringa separata da virgole
                             return $c->export(new Request(['ids'=>$ids]));
                         })
-                        ->visible(fn()=> auth()->user()->hasRole('reporting-admin, super_admin'))
+                        ->visible(fn()=> auth()->user()->hasRole(['reporting-admin', 'super_admin']))
                         ->icon('heroicon-o-arrow-down-tray')
                 ]),
 
