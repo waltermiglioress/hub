@@ -17,6 +17,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Set;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -108,17 +109,20 @@ class ProductionResource extends Resource
                             ->required(),
 
                         TextInput::make('value')
+
                             //->mask(RawJs::make('$money($input)'))
 //                            ->stripCharacters('.')
-                            ->live(debounce: 600)
+                            ->live(debounce: 700)
                             ->step("any")
                             ->numeric()
+                            ->minValue(-10000000)
                             ->prefix('€')
                             ->label('Valore lavorazione')
                             ->afterStateUpdated(callback: function (Set $set, $get, $state) {
-                                $calc = (int)$get('percentage') * ($state / 100);
+                                $calc = ((int)$get('percentage')) * ($state / 100);
                                 $set('imponibile', $calc);
                             })
+
                             ->required(),
 
 
@@ -144,6 +148,7 @@ class ProductionResource extends Resource
                                     ->required(),
                                 DatePicker::make('date_start')
                                     ->label('Data inizio')
+                                    ->minDate(now()->subYears(10))
                                     ->displayFormat('d/m/Y')
                                     ->required(),
                                 DatePicker::make('date_end')

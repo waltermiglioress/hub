@@ -98,9 +98,9 @@ class ProductionExport implements FromQuery, WithHeadings, WithMapping, WithColu
     {
         return [
             'C' => NumberFormat::FORMAT_PERCENTAGE_0,
-            'D' => NumberFormat::FORMAT_CURRENCY_EUR,
-            'E' => NumberFormat::FORMAT_CURRENCY_EUR,
-            'L' => NumberFormat::FORMAT_CURRENCY_EUR,
+//            'D' => NumberFormat::FORMAT_CURRENCY_EUR,
+//            'E' => NumberFormat::FORMAT_CURRENCY_EUR,
+//            'L' => NumberFormat::FORMAT_CURRENCY_EUR,
         ];
     }
 
