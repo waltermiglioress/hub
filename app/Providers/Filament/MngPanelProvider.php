@@ -105,10 +105,10 @@ class MngPanelProvider extends PanelProvider
                     //->isActiveWhen(fn () => request()->routeIs('filament.admin.pages.dashboard')),
 
             ])
-            ->renderHook(
-                PanelsRenderHook::SIDEBAR_FOOTER,
-                fn (): string => view('filament.custom-sidebar-footer'),
-            )
+//            ->renderHook(
+//                PanelsRenderHook::SIDEBAR_FOOTER,
+//                fn (): string => view('filament.custom-sidebar-footer'),
+//            )
             ->viteTheme('resources/css/filament/mng/theme.css')
             ->plugin(
 

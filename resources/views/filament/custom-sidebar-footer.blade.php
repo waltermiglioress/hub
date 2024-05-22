@@ -1,4 +1,4 @@
 
 <div class="p-4">
-    <img src="{{ asset('image/logowtr.png') }}" alt="Logo" class="w-full h-auto">
+    <img src="{{ asset('image/logo.png') }}" alt="Logo" class="m-auto w-0.5">
 </div>
