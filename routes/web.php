@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,4 @@ Route::get('/', function () {
 Route::redirect('/','/mng');
 
 //Route::get('/production/export', [\App\Http\Controllers\ProductionController::class,'export'])->name('production.export');
+// Rotte per richiedere il reset della password (inserimento email)

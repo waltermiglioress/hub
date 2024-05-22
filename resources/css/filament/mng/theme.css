@@ -2,6 +2,8 @@
 
 @config 'tailwind.config.js';
 
+
+
 .progress-bar{
     @apply h-4 w-full bg-gray-100 dark:bg-gray-800 rounded-full shadow-inner overflow-hidden;
 }
@@ -41,7 +43,7 @@ div.mng-wdg-prd *{
 /*    @apply text-primary-500*/
 /*}*/
 .fi-simple-layout,.fi-simple-main-ctn{
-    @apply flex w-full flex-grow;
+    @apply flex flex-grow;
 }
 .fi-simple-main{
     @apply   w-full bg-white !my-0  !px-0 !py-0 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 sm:rounded-xl sm:px-12 sm:!max-w-full;

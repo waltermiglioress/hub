@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\PasswordReset\CustomResetPassword;
+use App\Http\Requests\ResetPasswordRequest;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -9,6 +11,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
+use Filament\Pages\Auth\PasswordReset\RequestPasswordReset;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -36,6 +39,7 @@ class MngPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->path('mng')
             ->login()
+            ->passwordReset(RequestPasswordReset::class)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -101,6 +105,10 @@ class MngPanelProvider extends PanelProvider
                     //->isActiveWhen(fn () => request()->routeIs('filament.admin.pages.dashboard')),
 
             ])
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_FOOTER,
+                fn (): string => view('filament.custom-sidebar-footer'),
+            )
             ->viteTheme('resources/css/filament/mng/theme.css')
             ->plugin(
 
@@ -120,6 +128,7 @@ class MngPanelProvider extends PanelProvider
                         'default' => 1,
                         'sm' => 2,
                     ]),
+
 
             //FilamentSpatieRolesPermissionsPlugin::make()
             );
