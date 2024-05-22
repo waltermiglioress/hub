@@ -7,6 +7,7 @@ use App\Models\Production;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 
 
@@ -24,10 +25,10 @@ class ProductionOverview extends BaseWidget
     {
 
 
-        $fatturato= $this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','fatturato')->sum('imponibile');
-        $stimato= $this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','stimato')->sum('imponibile');
-        $contabilizzatonft= $this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','contabilizzato e non ft')->sum('imponibile');
-        $incorso= $this->getPageTableQuery()->where('imponibile','>',0,'and')->where('status','in corso')->sum('imponibile');
+        $fatturato= $this->getPageTableQuery()->where('status','fatturato')->sum('imponibile');
+        $stimato= $this->getPageTableQuery()->where('status','stimato')->sum('imponibile');
+        $contabilizzatonft= $this->getPageTableQuery()->where('status','contabilizzato e non ft')->sum('imponibile');
+        $incorso= $this->getPageTableQuery()->where('status','in corso')->sum('imponibile');
 
         $formatNumber = function (int $number): string {
             if ($number < 1000) {
