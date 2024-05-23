@@ -262,6 +262,7 @@ class ProductionResource extends Resource
                             );
                     })
             ], layout: FiltersLayout::AboveContent)
+            ->persistFiltersInSession()
             ->deferFilters()
             ->filtersApplyAction(
                 fn(Action $action) => $action
