@@ -75,10 +75,7 @@ class RequestPasswordReset extends BaseRequestPasswordReset
                 'required',
                 'confirmed',
                 'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*#?&]/'
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
             ],
         ];
     }
