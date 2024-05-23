@@ -74,7 +74,7 @@ class RequestPasswordReset extends BaseRequestPasswordReset
             'password' => [
                 'required',
                 'confirmed',
-                'min:8',
+//                'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
             ],
         ];
