@@ -122,7 +122,6 @@ class ProductionResource extends Resource
                                 $calc = ((int)$get('percentage')) * ($state / 100);
                                 $set('imponibile', $calc);
                             })
-
                             ->required(),
 
 
@@ -176,7 +175,7 @@ class ProductionResource extends Resource
                     TextColumn::make('date_end')->date('d/m/Y')->label('Data fine'),
                 ])->alignment(Alignment::Center)
                     ->wrapHeader(),
-                TextColumn::make('type')->label('Identificativo')->searchable(),
+                TextColumn::make('type')->label('Identificativo')->searchable()->sortable(),
                 ColumnGroup::make('Valori', [
                     TextColumn::make('value')->label('Valore')
                         ->money('eur', true)
@@ -212,7 +211,10 @@ class ProductionResource extends Resource
                         'in corso' => 'primary',
                     }),
 
-                TextColumn::make('updated_at')->dateTime('d/m/y H:i', 'Europe/Rome')->label('Ultimo aggiornamento'),
+                TextColumn::make('updated_at')
+                    ->dateTime('d/m/y H:i', 'Europe/Rome')
+                    ->label('Ultimo aggiornamento')
+                    ->sortable(),
 
 
 //                TextColumn::make('ft')->label('Fattura')
@@ -239,6 +241,7 @@ class ProductionResource extends Resource
                     ->options(Project::whereHas('users', function ($query) {
                         $query->where('user_id', Auth::id());
                     })->pluck('code', 'id'))
+                    ->multiple()
                     ->searchable()
                     ->preload(),
 
@@ -287,10 +290,10 @@ class ProductionResource extends Resource
                         ->action(function (Collection $records) {
                             $ids = $records->pluck('id')->join(',');
                             Log::info("IDs received from bulk: " . $ids);
-                            $c= new ProductionController();// Estrai gli ID e uniscili in una stringa separata da virgole
-                            return $c->export(new Request(['ids'=>$ids]));
+                            $c = new ProductionController();// Estrai gli ID e uniscili in una stringa separata da virgole
+                            return $c->export(new Request(['ids' => $ids]));
                         })
-                        ->visible(fn()=> auth()->user()->hasRole(['reporting-admin', 'super_admin']))
+                        ->visible(fn() => auth()->user()->hasRole(['reporting-admin', 'super_admin']))
                         ->icon('heroicon-o-arrow-down-tray')
                 ]),
 
