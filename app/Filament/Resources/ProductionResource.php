@@ -3,7 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Exports\ProductionExport;
-use App\Filament\Actions\ExportProdPeriod;
+
+use App\Filament\Exports\ProductionExporter;
 use App\Filament\Resources\ProductionResource\Pages;
 
 use App\Http\Controllers\ProductionController;
@@ -12,6 +13,7 @@ use App\Models\Project;
 use App\Tables\Columns\ProgressColumn;
 
 
+use Filament\Actions\ExportAction;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Set;
@@ -31,6 +33,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -285,8 +288,11 @@ class ProductionResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make('exportergrid')
+                        ->label('Esporta griglia')
+                        ->exporter(ProductionExporter::class),
                     BulkAction::make('export')
-                        ->label('Esporta selezionati')
+                        ->label('Esporta per competenza')
                         ->action(function (Collection $records) {
                             $ids = $records->pluck('id')->join(',');
                             Log::info("IDs received from bulk: " . $ids);
