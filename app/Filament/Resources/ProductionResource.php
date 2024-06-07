@@ -14,6 +14,7 @@ use App\Tables\Columns\ProgressColumn;
 
 
 use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Set;
@@ -290,6 +291,9 @@ class ProductionResource extends Resource
                     DeleteBulkAction::make(),
                     ExportBulkAction::make('exportergrid')
                         ->label('Esporta griglia')
+                        ->columnMapping(false)
+                        ->fileDisk('exports')
+                        ->fileName(fn (Export $export): string => "produzioni-{$export->getKey()}.csv")
                         ->exporter(ProductionExporter::class),
                     BulkAction::make('export')
                         ->label('Esporta per competenza')
