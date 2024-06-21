@@ -288,7 +288,8 @@ class ProductionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->hasRole(['reporting-admin', 'super_admin'])),
                     ExportBulkAction::make('exportergrid')
                         ->label('Esporta griglia')
                         ->columnMapping(false)
