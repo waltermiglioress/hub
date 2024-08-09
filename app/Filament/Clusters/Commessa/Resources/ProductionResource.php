@@ -1,35 +1,30 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Commessa\Resources;
 
-use App\Exports\ProductionExport;
-
+use App\Filament\Clusters\Commessa;
+use App\Filament\Clusters\Commessa\Resources;
 use App\Filament\Exports\ProductionExporter;
 use App\Filament\Resources\ProductionResource\Pages;
-
 use App\Http\Controllers\ProductionController;
 use App\Models\Production;
 use App\Models\Project;
 use App\Tables\Columns\ProgressColumn;
-
-
-use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Models\Export;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Set;
-use Filament\Support\Enums\ActionSize;
-use Filament\Support\Enums\Alignment;
-use Filament\Support\RawJs;
-use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -44,21 +39,20 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
+
 
 class ProductionResource extends Resource
 {
     protected static ?string $model = Production::class;
+    protected static ?int $navigationSort = 1;
 
+    protected static ?string $cluster = Commessa::class;
     protected static ?string $modelLabel = 'Produzione';
 
     protected static ?string $pluralModelLabel = 'Produzioni';
-//    protected static ?string $navigationGroup = 'Gestione rifiuti';
 
     protected static ?string $navigationLabel = 'Monitoraggio commessa';
 
@@ -332,9 +326,9 @@ class ProductionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProductions::route('/'),
-            'create' => Pages\CreateProduction::route('/create'),
-            'edit' => Pages\EditProduction::route('/{record}/edit'),
+            'index' => Resources\ProductionResource\Pages\ListProductions::route('/'),
+            'create' => Resources\ProductionResource\Pages\CreateProduction::route('/create'),
+            'edit' => Resources\ProductionResource\Pages\EditProduction::route('/{record}/edit'),
         ];
     }
 

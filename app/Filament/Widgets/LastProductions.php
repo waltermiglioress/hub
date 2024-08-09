@@ -2,16 +2,13 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\ProductionResource;
+use App\Filament\Clusters\Commessa\Resources\ProductionResource;
 use App\Tables\Columns\ProgressColumn;
 use Filament\Support\Enums\Alignment;
-use Filament\Tables;
 use Filament\Tables\Columns\ColumnGroup;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Contracts\View\View;
 
 class LastProductions extends BaseWidget
 {

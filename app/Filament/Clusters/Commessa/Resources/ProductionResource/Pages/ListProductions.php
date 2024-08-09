@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\ProductionResource\Pages;
+namespace App\Filament\Clusters\Commessa\Resources\ProductionResource\Pages;
 
-use App\Filament\Resources\ProductionResource;
+use App\Filament\Clusters\Commessa\Resources\ProductionResource;
 use Filament\Actions;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Pages\ListRecords;

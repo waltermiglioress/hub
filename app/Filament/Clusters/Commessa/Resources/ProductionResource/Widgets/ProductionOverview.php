@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\ProductionResource\Widgets;
+namespace App\Filament\Clusters\Commessa\Resources\ProductionResource\Widgets;
 
-use App\Filament\Resources\ProductionResource\Pages\ListProductions;
-use App\Models\Production;
+use App\Filament\Clusters\Commessa\Resources\ProductionResource\Pages\ListProductions;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 
 

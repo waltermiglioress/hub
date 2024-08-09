@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ProductionResource\Pages;
+namespace App\Filament\Clusters\Commessa\Resources\PerformanceResource\Pages;
 
-use App\Filament\Resources\ProductionResource;
+use App\Filament\Clusters\Commessa\Resources\PerformanceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditProduction extends EditRecord
+class EditPerformance extends EditRecord
 {
-    protected static string $resource = ProductionResource::class;
+    protected static string $resource = PerformanceResource::class;
 
     protected function getHeaderActions(): array
     {
