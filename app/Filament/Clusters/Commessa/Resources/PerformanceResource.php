@@ -18,6 +18,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -421,5 +422,11 @@ class PerformanceResource extends Resource
             'create' => Resources\PerformanceResource\Pages\CreatePerformance::route('/create'),
             'edit' => Resources\PerformanceResource\Pages\EditPerformance::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+
+        return parent::getEloquentQuery()->whereIn('project_id', auth()->user()->projects()->pluck('id'));
     }
 }
