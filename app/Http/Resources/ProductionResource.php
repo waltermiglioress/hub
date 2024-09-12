@@ -40,11 +40,12 @@ class ProductionResource extends JsonResource
                 'percentage' => $this->percentage / 100,
                 'value' => $this->value,
                 'imponibile' => $this->imponibile,
+                'client_name' => $this->client->name,
+                'project_code' => $this->project->code_ind,
                 'date_start' => $start->format('d/m/Y'),
                 'date_end' => $end->format('d/m/Y'),
                 'status' => $this->status,
-                'client_name' => $this->client->name,
-                'project_code' => $this->project->code_ind,
+                'note' => $this->note,
                 'month' => $month->format('d/m/Y'),
                 'imponibile_mensile' => $imponibileMensile
             ];
