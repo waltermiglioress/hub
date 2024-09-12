@@ -11,7 +11,7 @@ class ProductionController extends Controller
 {
     public function report(){
 
-        $prod = Production::where('status','fatturato')->get();
+        $prod = Production::where('status','!=','fatturato')->get();
 //        dd($prod);
 
         return ProductionResource::collection($prod);
