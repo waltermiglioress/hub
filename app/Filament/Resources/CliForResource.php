@@ -10,6 +10,7 @@ use App\Models\CliFor;
 
 use App\Models\State;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -64,44 +65,45 @@ class CliForResource extends Resource
                             ->required(),
                         TextInput::make('CF')
                             ->label('Codice Fiscale'),
-                        ToggleButtons::make('client')
-                            ->label('Tipo Anagrafica')
-                            ->default(1)
-                            ->options([
-                                0 => 'Cliente',
-                                1 => 'Fornitore',])
-                            ->inline(),
+                        Checkbox::make('is_client')
+                            ->label('Cliente?')
+                            ->inline()
+                            ->required(),
+                        Checkbox::make('is_supplier')
+                            ->label('Fornitore')
+                            ->inline()
+                            ->required(),
 
                         Fieldset::make('Indirizzi')
                             ->schema([
                                 Select::make('country_id')
                                     ->label('Paese')
-                                    ->relationship('country','name')
+                                    ->relationship('country', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->live()
-                                    ->afterStateUpdated(function (Set $set){
-                                        $set('state_id',null);
-                                        $set('city_id',null);
+                                    ->afterStateUpdated(function (Set $set) {
+                                        $set('state_id', null);
+                                        $set('city_id', null);
                                     })
                                     ->required(),
                                 Select::make('state_id')
                                     ->label('Regione/Provincia')
-                                    ->options(fn(Get $get): Collection =>State::query()
+                                    ->options(fn(Get $get): Collection => State::query()
                                         ->where('country_id', $get('country_id'))
-                                        ->pluck('name','id'))
+                                        ->pluck('name', 'id'))
 //                    ->relationship('state','name')
                                     ->searchable()
                                     ->live()
-                                    ->afterStateUpdated(fn(Set $set) => $set('city_id',null))
+                                    ->afterStateUpdated(fn(Set $set) => $set('city_id', null))
                                     ->preload()
                                     ->required(),
 
                                 Select::make('city_id')
                                     ->label('Città')
-                                    ->options(fn(Get $get): Collection =>City::query()
+                                    ->options(fn(Get $get): Collection => City::query()
                                         ->where('state_id', $get('state_id'))
-                                        ->pluck('name','id'))
+                                        ->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->live()

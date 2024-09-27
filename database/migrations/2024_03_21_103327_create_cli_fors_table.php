@@ -17,7 +17,7 @@ return new class extends Migration
             $table->char('avatar')->nullable();
             $table->char('piva',11)->unique()->nullable();
             $table->char('CF')->nullable();
-            $table->boolean('client')->default(false);
+            $table->boolean('is_client')->default(false);
             $table->string('address')->nullable();
             $table->foreignId('country_id')->constrained();
             $table->foreignId('state_id')->constrained();
