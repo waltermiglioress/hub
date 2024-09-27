@@ -36,15 +36,15 @@ class CliForResource extends Resource
 {
     protected static ?string $model = CliFor::class;
 
-    protected static ?string $modelLabel = 'Anagrafica';
+    protected static ?string $modelLabel = 'Cliente Fornitore';
 
-    protected static ?string $pluralModelLabel = 'Anagrafiche';
+    protected static ?string $pluralModelLabel = 'Clienti Fornitori';
 
-    protected static ?string $navigationGroup = 'Work';
+    protected static ?string $navigationGroup = 'Anagrafiche';
 
 //    protected static ?string $navigationLabel = 'Clienti/Fornitori';
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
 
     public static function form(Form $form): Form

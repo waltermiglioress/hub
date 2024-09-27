@@ -31,7 +31,7 @@ class ProjectResource extends Resource
 
     protected static ?string $navigationLabel = 'Elenco commesse';
 
-    protected static ?string $navigationGroup = 'Elenchi';
+    protected static ?string $navigationGroup = 'Anagrafiche';
 
     protected static ?string $navigationIcon = 'heroicon-o-wrench';
 

@@ -36,11 +36,11 @@ class TenderResource extends Resource
     protected static ?string $modelLabel = 'Gare';
 
     protected static ?string $pluralModelLabel = 'Gare';
-    protected static ?string $navigationGroup = 'Elenchi';
+    protected static ?string $navigationGroup = 'Anagrafiche';
 
     protected static ?string $navigationLabel = 'Elenco gare';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
 
     public static function form(Form $form): Form
     {

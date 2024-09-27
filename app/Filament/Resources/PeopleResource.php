@@ -35,7 +35,7 @@ class PeopleResource extends Resource
     protected static ?string $modelLabel = 'Rubrica';
 
     protected static ?string $pluralModelLabel = 'Rubrica';
-    protected static ?string $navigationGroup = 'Elenchi';
+    protected static ?string $navigationGroup = 'Utilità';
 
     protected static ?string $navigationLabel = 'Rubrica';
 
