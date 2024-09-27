@@ -10,7 +10,9 @@ use App\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -39,68 +41,86 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('code')
-                    ->label('Codice commessa')
-                    ->required(),
-                TextInput::make('code_ind')
-                    ->label('Codice industriale')
-                    ->required(),
-                TextInput::make('desc')
-                    ->label('Descrizione')
-                    ->required(),
-                TextInput::make('contract')
-                    ->label('N. contratto')
-                    ->required(),
-                Radio::make('status')
-                    ->options([
-                        '0' => 'Non attiva',
-                        '1' => 'Attiva',
-                    ])
-                    ->inline()
-                    ->required(),
-                Select::make('currency')
-                    ->label('Valuta')
-                    ->searchable()
-                    ->options(function (): array {
-                        $list = Currency::getCurrencies();
+                Section::make()
+                    ->schema([
+                        TextInput::make('code')
+                            ->label('Codice commessa')
+                            ->required(),
+                        TextInput::make('code_ind')
+                            ->label('Codice industriale')
+                            ->required(),
+                        TextInput::make('contract')
+                            ->label('N. contratto')
+                            ->required(),
+                        TextInput::make('CIG')
+                            ->label('CIG')
+                            ->required(),
+                        TextInput::make('contractor')
+                            ->label('Appaltatore')
+                            ->required(),
+                        Select::make('tender_id')
+                            ->label('Gara')
+                            ->nullable()
+                            ->relationship('tender', 'num'),
+                        Select::make('responsible_id')
+                            ->label('Responsabile')
+                            ->relationship('manager', 'firstname')
+                            ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->firstname} {$record->lastname}")
+                            ->searchable(['firstname', 'lastname']),
+                        TextInput::make('desc')
+                            ->label('Descrizione breve')
+                            ->required()
+                            ->columnSpan(2),
+                        TextArea::make('long_desc')
+                            ->label('Descrizione lunga')
+                            ->columnSpanFull()
+                    ])->columnSpan(2)->columns(3),
+                Section::make()
+                    ->schema([
+                        Select::make('group')
+                            ->label('Gruppo')
+                            ->options([
+                                'Sicilsaldo' => 'SICILSALDO',
+                                'Nuova Ghizzoni' => 'NUOVA GHIZZONI'
+                            ])
+                            ->required()
+                            ->columnSpan(2),
+                        Select::make('clifor_id')
+                            ->label('Cliente')
+                            ->relationship('clifor', 'name')
+                            ->createOptionForm(fn(Form $form) => CliForResource::form($form))
+                            ->createOptionAction(
+                                fn(Action $action) => $action->modalWidth('5xl'),
+                            )
+                            ->required()
+                            ->columnSpan(2),
+                        Radio::make('status')
+                            ->options([
+                                '0' => 'Non attiva',
+                                '1' => 'Attiva',
+                            ])
+                            ->inline()
+                            ->columnSpan(2)
+                            ->required(),
+                        Select::make('currency')
+                            ->label('Valuta')
+                            ->searchable()
+                            ->options(function (): array {
+                                $list = Currency::getCurrencies();
 //                        dd($list);
-                        $currencies = collect($list)->mapWithKeys(function ($item, $key) {
-                            return [$key => $item['name']];
-                        })->toArray();
+                                $currencies = collect($list)->mapWithKeys(function ($item, $key) {
+                                    return [$key => $item['name']];
+                                })->toArray();
 
-                        return !empty($currencies) ? $currencies : ['no currencies'];
-                    })
-                    ->noSearchResultsMessage(__('Valuta non trovata')),
-                TextInput::make('value')
-                    ->label('Valore contrattuale')
-                    ->numeric(),
+                                return !empty($currencies) ? $currencies : ['no currencies'];
+                            })
+                            ->noSearchResultsMessage(__('Valuta non trovata')),
+                        TextInput::make('value')
+                            ->label('Valore contrattuale')
+                            ->numeric(),
+                    ])->columnSpan(1)->columns(2),
 
-                Select::make('group')
-                    ->label('Gruppo')
-                    ->options([
-                        'Sicilsaldo' => 'SICILSALDO',
-                        'Nuova Ghizzoni' => 'NUOVA GHIZZONI'
-                    ])
-                    ->required(),
-                Select::make('clifor_id')
-                    ->label('Cliente')
-                    ->relationship('clifor', 'name')
-                    ->createOptionForm(fn(Form $form) => CliForResource::form($form))
-                    ->createOptionAction(
-                        fn(Action $action) => $action->modalWidth('5xl'),
-                    )
-                    ->required(),
-                Select::make('tender_id')
-                    ->label('Gara')
-                    ->nullable()
-                    ->relationship('tender', 'num'),
-                Select::make('responsible_id')
-                    ->label('Responsabile')
-                    ->relationship('manager', 'firstname')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->firstname} {$record->lastname}")
-                    ->searchable(['firstname', 'lastname']),
-
-            ]);
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
@@ -108,18 +128,31 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('code')
-                    ->label('Codice'),
+                    ->label('Codice')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('code_ind')
-                    ->label('Codice Industriale'),
+                    ->label('Codice Industriale')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('CIG')
+                    ->label('CIG')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('contractor')
+                    ->label('Appaltatore')
+                    ->searchable(),
                 TextColumn::make('group')
                     ->label('Gruppo'),
                 TextColumn::make('desc')
-                    ->label('Descrizione')
+                    ->label('Descrizione breve')
+                    ->searchable()
                     ->wrap(),
                 TextColumn::make('contract')
-                    ->label('N. Contratto'),
+                    ->label('N. Contratto')
+                    ->searchable(),
                 TextColumn::make('value')
-                    ->label('Valore')
+                    ->label('Valore presunto')
                     ->money(function (Project $record): Currency {
                         // Verifica se il record esiste e ha un attributo 'currency' non vuoto
                         if (!empty($record) && !empty($record->currency)) {

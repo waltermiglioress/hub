@@ -86,11 +86,11 @@ class MngPanelProvider extends PanelProvider
             ->navigationGroups([
 
                 NavigationGroup::make()
-                    ->label('Elenchi'),
+                    ->label('Anagrafiche'),
                 NavigationGroup::make()
-                    ->label('Work'),
+                    ->label('Configurazioni'),
                 NavigationGroup::make()
-                    ->label('Setting'),
+                    ->label('Utilità'),
 //                NavigationGroup::make()
 //                    ->label(fn (): string => __('navigation.setting'))
 //                    ->icon('heroicon-o-cog-6-tooth')
@@ -98,6 +98,7 @@ class MngPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('PowerBi')
+                    ->group('Utilità')
                     ->url('https://app.powerbi.com', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-chart-pie')
                     ->sort(99)
