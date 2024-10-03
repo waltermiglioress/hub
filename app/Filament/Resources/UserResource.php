@@ -48,7 +48,7 @@ class UserResource extends Resource
                 FileUpload::make('avatar')
                     ->label('Logo')
                     ->preserveFilenames()
-                    ->disk('avatar')
+                    ->disk('public')
                     ->image()
                     ->avatar()
                     ->openable()

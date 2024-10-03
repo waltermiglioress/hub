@@ -5,10 +5,10 @@
 
 
 .progress-bar{
-    @apply h-4 w-full bg-gray-100 dark:bg-gray-800 rounded-full shadow-inner overflow-hidden;
+    @apply h-6 w-full  dark:bg-gray-800 rounded-full shadow-inner overflow-hidden;
 }
 .progress-bar-value {
-    @apply flex h-full items-center justify-center bg-primary-600 dark:bg-primary-500 rounded-r-full shadow-inner text-xs font-bold text-white;
+    @apply flex h-full items-center justify-center rounded-r-full shadow-inner text-xs font-bold text-white;
 }
 
 div.mng-wdg-prd *{

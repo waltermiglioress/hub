@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CliFor extends Model
 {
@@ -15,9 +16,11 @@ class CliFor extends Model
         'avatar',
         'piva',
         'CF',
-        'client',
+        'is_client',
+        'is_supplier',
         'address',
         'cap',
+        'password',
         'country_id',
         'state_id',
         'city_id',
@@ -36,5 +39,9 @@ class CliFor extends Model
 
     public function city():BelongsTo{
         return $this->belongsTo(City::class);
+    }
+
+    public function complianceDocuments():HasMany{
+        return $this->hasMany(ComplianceDocument::class);
     }
 }

@@ -31,6 +31,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 
 class CliForResource extends Resource
 {
@@ -65,13 +66,15 @@ class CliForResource extends Resource
                             ->required(),
                         TextInput::make('CF')
                             ->label('Codice Fiscale'),
-                        Checkbox::make('is_client')
-                            ->label('Cliente?')
-                            ->inline()
+                        ToggleButtons::make('is_client')
+                            ->label('È cliente?')
+                            ->boolean()
+                            ->grouped()
                             ->required(),
-                        Checkbox::make('is_supplier')
-                            ->label('Fornitore')
-                            ->inline()
+                        ToggleButtons::make('is_supplier')
+                            ->label('È fornitore?')
+                            ->boolean()
+                            ->grouped()
                             ->required(),
 
                         Fieldset::make('Indirizzi')
@@ -131,6 +134,11 @@ class CliForResource extends Resource
                     TextInput::make('tel')
                         ->label('Telefono')
                         ->tel(),
+                    TextInput::make('password')
+                        ->password()
+                        ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                        ->dehydrated(fn (?string $state): bool => filled($state))
+                        ->required(fn (string $operation): bool => $operation === 'create'),
                     TextInput::make('email')
                         ->label('Email')
                         ->email(),
