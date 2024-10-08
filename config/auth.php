@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'pfs' => [
+            'driver' => 'session',
+            'provider' => 'cli_fors',
+        ],
     ],
 
     /*
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'cli_fors' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\CliFor::class,
         ],
 
         // 'users' => [

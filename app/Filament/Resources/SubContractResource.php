@@ -12,6 +12,7 @@ use App\Tables\Columns\ProgressColumn;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -27,6 +28,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
+use Nette\Utils\Html;
 
 class SubContractResource extends Resource
 {
@@ -50,7 +53,9 @@ class SubContractResource extends Resource
                     ->schema([
                         Select::make('project_id')->label('Commessa')
                             ->searchable()
-                            ->relationship('project', 'code')
+                            ->options(Project::whereHas('users', function ($query) {
+                                $query->where('user_id', auth()->id());
+                            })->pluck('code', 'id'))
                             ->preload()
                             ->live(),
                         Select::make('client_id')
@@ -109,6 +114,7 @@ class SubContractResource extends Resource
 //                                Header::make('Allegati'),
 //                                Header::make('Data verifica'),
 //                            ])
+
                         Repeater::make('compliance_documents')
                             ->label('Sezione relativa il caricamento dei documenti requisiti. Espandi ciascuna sezione e compila i moduli richiesti.')
                             ->relationship('complianceDocumentSubContracts') // La relazione con la tabella pivot
@@ -123,7 +129,24 @@ class SubContractResource extends Resource
                                         Select::make('compliance_document_id')
                                             ->label('Documento di conformità')
                                             ->relationship('complianceDocument', 'title', ignoreRecord: true)  // Usa la relazione con ComplianceDocument e il campo 'title'
-                                            ->searchable()  // Permetti la ricerca
+                                            ->searchable()// Permetti la ricerca
+                                            ->fixIndistinctState()
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                            ->live()
+                                            ->helperText(function ($get) {
+                                                $complianceDocumentId = $get('compliance_document_id');
+
+                                                if ($complianceDocumentId) {
+                                                    // Recupera il documento di conformità selezionato
+                                                    $document = ComplianceDocument::find($complianceDocumentId);
+
+                                                    // Restituisci la descrizione come HtmlString per interpretarla come HTML, assicurandoti che sia una stringa
+                                                    return new HtmlString($document->desc ?? '');
+                                                }
+
+                                                // Restituisce una stringa vuota se non c'è un documento selezionato
+                                                return new HtmlString('');
+                                            })
                                             ->required(),
 
                                         TextArea::make('desc')
@@ -159,12 +182,42 @@ class SubContractResource extends Resource
                                     ])->columnSpan(1),
 
                             ])
-                            ->itemLabel(fn(array $state, $record): ?string => $state['title'] ?? ($record->complianceDocument->title ?? null))  // Usa $state per creazione e $record per modifica
+                            ->itemLabel(function (array $state, $record): HtmlString {
+                                // Determina il titolo del documento
+                                $title = null;
+
+                                // Se siamo in fase di creazione o aggiornamento e lo stato contiene 'compliance_document_id'
+                                if (isset($state['compliance_document_id'])) {
+                                    // Recupera il titolo del documento di conformità associato all'ID
+                                    $document = \App\Models\ComplianceDocument::find($state['compliance_document_id']);
+                                    $title = $document->title ?? 'Documento';
+                                } elseif ($record && $record->complianceDocument) {
+                                    // Altrimenti, usa il titolo dal record già salvato, se disponibile
+                                    $title = $record->complianceDocument->title ?? 'Documento';
+                                } else {
+                                    $title = 'Documento';
+                                }
+                                // Determina l'icona in base allo status
+                                $status = $state['status'] ?? ($record->status ?? 'pending');
+                                $icon = match ($status) {
+                                    'approved' => '<svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>',
+                                    'rejected' => '<svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>',
+                                    default => '<svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m-6-8h6" /></svg>',
+                                };
+                                // Genera l'HTML per il titolo e l'icona usando un contenitore flex
+                                $content = "<div class='flex items-center space-x-14'>{$icon}<span class='px-2.5'>{$title}</span></div>";
+                                // Restituisce un'istanza di HtmlString per interpretare correttamente l'SVG come HTML
+                                return new HtmlString($content);
+                            })
                             ->required()
                             ->collapsed()
+                            ->deleteAction(
+                                fn(Action $action) => $action->requiresConfirmation(),
+                            )
                             ->columns(4),
                     ])
             ]);
+
     }
 
     public static function table(Table $table): Table
@@ -209,7 +262,6 @@ class SubContractResource extends Resource
                     ->label('Percentuale')
                     ->sortable(),
             ])
-
             ->filters([
                 //
             ])

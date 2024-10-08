@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class CliForResource extends Resource
 {
@@ -63,9 +64,11 @@ class CliForResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->numeric()
                             ->maxLength(11)
-                            ->required(),
+                            ->required(fn(string $context): bool => $context === 'create'),
                         TextInput::make('CF')
-                            ->label('Codice Fiscale'),
+                            ->label('Codice Fiscale')
+                            ->required(fn(string $context): bool => $context === 'create')
+                            ->unique(ignoreRecord: true),
                         ToggleButtons::make('is_client')
                             ->label('È cliente?')
                             ->boolean()
@@ -134,17 +137,42 @@ class CliForResource extends Resource
                     TextInput::make('tel')
                         ->label('Telefono')
                         ->tel(),
-                    TextInput::make('password')
-                        ->password()
-                        ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
-                        ->dehydrated(fn (?string $state): bool => filled($state))
-                        ->required(fn (string $operation): bool => $operation === 'create'),
                     TextInput::make('email')
                         ->label('Email')
-                        ->email(),
+                        ->email()
+                        ->required(fn(string $context): bool => $context === 'create')
+                        ->unique(ignoreRecord: true)
+                        ->validationMessages([
+                            'unique' => 'Il campo :attribute esiste già!',
+                        ])
+                        ->email()
+                        ->label('Email'),
+                    TextInput::make('password')
+                        ->dehydrateStateUsing(fn(string $state): string => filled($state) ? Hash::make($state) : $state)
+                        ->dehydrated(fn(?string $state): bool => filled($state))
+                        ->label('Password')
+                        ->rules([Password::min(8)->symbols()->mixedCase()->numbers()])
+                        ->validationMessages([
+                            'min' => 'La lunghezza del campo :attribute deve essere di almeno :value.',
+                            'alpha_num:ascii' => 'La :attribute deve avere caratteri alfa numerici',
+                        ])
+                        ->required(fn(string $context): bool => $context === 'create')
+                        ->revealable(false)
+                        ->password()
+                        ->placeholder('••••••••') // Placeholder che simula una password esistente
+                        ->extraAttributes([
+                            'value' => '********', // Visualizza un valore placeholder di puntini in fase di modifica
+                        ])
+                        ->hint(fn($record) => $record ? 'Lascia vuoto per mantenere la password attuale' : '') ,
                     TextInput::make('website')
                         ->label('Sito web')
                         ->url(),
+                    Select::make('roles')
+                        ->relationship('roles', 'name')
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->required(),
                 ])->columnSpan(1),
 
             ])->columns(3);

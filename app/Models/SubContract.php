@@ -52,9 +52,23 @@ class SubContract extends Model
     {
         static::addGlobalScope('userProjects', function (Builder $builder) {
             if (auth()->check()) {
-                $userProjects = auth()->user()->projects->pluck('id');
-                $builder->whereIn('project_id', $userProjects);
+                $user = auth()->user();
+
+                // Se l'utente è un'istanza di User
+                if ($user instanceof User) {
+                    $userProjects = $user->projects->pluck('id');
+                    $builder->whereIn('project_id', $userProjects);
+                }
+
+                // Se l'utente è un'istanza di CliFor
+                if ($user instanceof CliFor) {
+                    // Filtra SubContracts per i progetti associati al CliFor
+                    $builder->whereHas('project', function ($query) use ($user) {
+                        $query->where('clifor_id', $user->id);  // Usa clifor_id per filtrare i progetti
+                    });
+                }
             }
+
         });
     }
 

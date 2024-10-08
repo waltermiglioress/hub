@@ -42,7 +42,6 @@ div.mng-wdg-prd *{
 /*.fi-sidebar-item > a:hover > span {*/
 /*    @apply text-primary-500*/
 /*}*/
-
 .fi-simple-layout,.fi-simple-main-ctn{
     @apply flex flex-grow;
 }

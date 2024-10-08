@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\People;
+use App\Models\ComplianceDocument;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PeoplePolicy
+class ComplianceDocumentPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class PeoplePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_people');
+        return $user->can('view_any_compliance::document');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, People $people): bool
+    public function view(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('view_people');
+        return $user->can('view_compliance::document');
     }
 
     /**
@@ -31,23 +31,23 @@ class PeoplePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_people');
+        return $user->can('create_compliance::document');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, People $people): bool
+    public function update(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('update_people');
+        return $user->can('update_compliance::document');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, People $people): bool
+    public function delete(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('delete_people');
+        return $user->can('delete_compliance::document');
     }
 
     /**
@@ -55,15 +55,15 @@ class PeoplePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_people');
+        return $user->can('delete_any_compliance::document');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, People $people): bool
+    public function forceDelete(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('force_delete_people');
+        return $user->can('force_delete_compliance::document');
     }
 
     /**
@@ -71,15 +71,15 @@ class PeoplePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_people');
+        return $user->can('force_delete_any_compliance::document');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, People $people): bool
+    public function restore(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('restore_people');
+        return $user->can('restore_compliance::document');
     }
 
     /**
@@ -87,15 +87,15 @@ class PeoplePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_people');
+        return $user->can('restore_any_compliance::document');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, People $people): bool
+    public function replicate(User $user, ComplianceDocument $complianceDocument): bool
     {
-        return $user->can('replicate_people');
+        return $user->can('replicate_compliance::document');
     }
 
     /**
@@ -103,6 +103,6 @@ class PeoplePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_people');
+        return $user->can('reorder_compliance::document');
     }
 }

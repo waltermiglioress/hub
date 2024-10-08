@@ -96,7 +96,12 @@ class UserResource extends Resource
                             ])
                             ->required(fn(string $context): bool => $context === 'create')
                             ->revealable()
-                            ->password(),
+                            ->password()
+                            ->placeholder('••••••••') // Placeholder che simula una password esistente
+                            ->extraAttributes([
+                                'value' => '********', // Visualizza un valore placeholder di puntini in fase di modifica
+                            ])
+                            ->hint(fn($record) => $record ? 'Lascia vuoto per mantenere la password attuale' : ''),
                     ]),
 
                 Section::make('Indirizzi')

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Helpers\Utils;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,140 +13,97 @@ class RolePolicy
 
     /**
      * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function viewAny(User $user): bool
+    public function viewAny($user): bool
     {
-        return $user->can('view_any_role');
+       return Utils::checkPermission($user,'view_any_role');
     }
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function view(User $user, Role $role): bool
+    public function view( $user, Role $role): bool
     {
-        return $user->can('view_role');
+        return Utils::checkPermission($user,'view_role');
     }
 
     /**
      * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function create(User $user): bool
+    public function create( $user): bool
     {
-        return $user->can('create_role');
+        return Utils::checkPermission($user,'create_role');
     }
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function update(User $user, Role $role): bool
+    public function update( $user, Role $role): bool
     {
-        return $user->can('update_role');
+        return Utils::checkPermission($user,'update_role');
     }
 
     /**
      * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function delete(User $user, Role $role): bool
+    public function delete( $user, Role $role): bool
     {
-        return $user->can('delete_role');
+        return Utils::checkPermission($user,'delete_role');
     }
 
     /**
      * Determine whether the user can bulk delete.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function deleteAny(User $user): bool
+    public function deleteAny( $user): bool
     {
-        return $user->can('delete_any_role');
+        return Utils::checkPermission($user,'delete_any_role');
     }
 
     /**
      * Determine whether the user can permanently delete.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function forceDelete(User $user, Role $role): bool
+    public function forceDelete( $user, Role $role): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return Utils::checkPermission($user,'{{ ForceDelete }}');
     }
 
     /**
      * Determine whether the user can permanently bulk delete.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function forceDeleteAny(User $user): bool
+    public function forceDeleteAny( $user): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return Utils::checkPermission($user,'{{ ForceDeleteAny }}');
     }
 
     /**
      * Determine whether the user can restore.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function restore(User $user, Role $role): bool
+    public function restore( $user, Role $role): bool
     {
-        return $user->can('{{ Restore }}');
+        return Utils::checkPermission($user,'{{ Restore }}');
     }
 
     /**
      * Determine whether the user can bulk restore.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function restoreAny(User $user): bool
+    public function restoreAny( $user): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return Utils::checkPermission($user,'{{ RestoreAny }}');
     }
 
     /**
      * Determine whether the user can replicate.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return bool
      */
-    public function replicate(User $user, Role $role): bool
+    public function replicate( $user, Role $role): bool
     {
-        return $user->can('{{ Replicate }}');
+        return Utils::checkPermission($user,'{{ Replicate }}');
     }
 
     /**
      * Determine whether the user can reorder.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
      */
-    public function reorder(User $user): bool
+    public function reorder( $user): bool
     {
-        return $user->can('{{ Reorder }}');
+        return Utils::checkPermission($user,'{{ Reorder }}');
     }
-
 }
