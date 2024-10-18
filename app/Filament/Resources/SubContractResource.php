@@ -201,7 +201,7 @@ class SubContractResource extends Resource
                                                     })
                                                     ->preserveFilenames()
                                                     ->storeFileNamesIn('filename')
-                                                    ->formatStateUsing(function (ComplianceDocumentSubContract $record) {
+                                                    ->formatStateUsing(function (?ComplianceDocumentSubContract $record) {
                                                         return $record?->attachments()->get()->pluck('path')->toArray();
                                                     })->dehydrated(false)
 

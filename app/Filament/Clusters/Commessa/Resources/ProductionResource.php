@@ -165,7 +165,7 @@ class ProductionResource extends Resource
                                     })
                                     ->preserveFilenames()
                                     ->storeFileNamesIn('filename')
-                                    ->formatStateUsing(function (Production $record) {
+                                    ->formatStateUsing(function (?Production $record) {
                                         return $record?->attachments()->get()->pluck('filename')->toArray();
                                     })->dehydrated(false)
                                 ,
