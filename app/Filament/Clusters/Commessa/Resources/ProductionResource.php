@@ -159,7 +159,7 @@ class ProductionResource extends Resource
                                     ->openable()
                                     ->label('Allegati')// Gestisci il caricamento dei file
                                     ->disk('attachment') // Definisci il disco
-                                    ->directory(function (Production $record) {
+                                    ->directory(function (?Production $record) {
                                         // Directory dinamica basata sul progetto e sul post
                                         return "projects/{$record->project->code}/produzioni/{$record->project->contract}";
                                     })

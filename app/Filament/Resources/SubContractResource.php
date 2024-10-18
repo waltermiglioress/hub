@@ -181,7 +181,7 @@ class SubContractResource extends Resource
                                                 FileUpload::make('attachments')
                                                     ->label('Allegati')// Gestisci il caricamento dei file
                                                     ->disk('attachment') // Definisci il disco
-                                                    ->directory(function (ComplianceDocumentSubContract $record, Get $get) {
+                                                    ->directory(function (?ComplianceDocumentSubContract $record, Get $get) {
                                                         // Ottieni il project_id dal form (fuori dal repeater)
                                                         $projectId = $get('../../project_id');
 
