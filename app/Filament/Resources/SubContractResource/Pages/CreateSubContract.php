@@ -18,7 +18,7 @@ class CreateSubContract extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-    protected function beforeCreate(): void
+    protected function afterCreate(): void
     {
         $subContract = $this->record;
 
