@@ -16,6 +16,7 @@ class LastProductions extends BaseWidget
     protected static ?int $sort = 5;
 
     protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Ultime produzioni';
 
     protected static ?string $pollingInterval = '15s';
 

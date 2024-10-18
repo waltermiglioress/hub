@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('compliance_document_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('notes')->nullable();
-            $table->string('attachment')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
         });

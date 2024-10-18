@@ -18,6 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/bi',[\App\Http\Controllers\PowerBI::class,'showTableData'])->name('powerbi.table');
+
 Route::redirect('/','/mng');
 
 //Route::get('/production/export', [\App\Http\Controllers\ProductionController::class,'export'])->name('production.export');

@@ -88,7 +88,7 @@ class MngPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Anagrafiche'),
                 NavigationGroup::make()
-                    ->label('Configurazioni'),
+                    ->label('Impostazioni'),
                 NavigationGroup::make()
                     ->label('Utilità'),
 //                NavigationGroup::make()
@@ -102,17 +102,7 @@ class MngPanelProvider extends PanelProvider
                     ->url('https://app.powerbi.com', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-chart-pie')
                     ->sort(99)
-
-                    //->group('Reports')
-                    //->label(fn (): string => __('filament-panels::pages/dashboard.title'))
-                    //->url(fn (): string => Dashboard::getUrl())
-                    //->isActiveWhen(fn () => request()->routeIs('filament.admin.pages.dashboard')),
-
-            ])
-//            ->renderHook(
-//                PanelsRenderHook::SIDEBAR_FOOTER,
-//                fn (): string => view('filament.custom-sidebar-footer'),
-//            )
+                    ])
             ->viteTheme('resources/css/filament/mng/theme.css')
             ->plugin(
 

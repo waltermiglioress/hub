@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class SubContract extends Model
 {
@@ -94,4 +95,11 @@ class SubContract extends Model
         // Calcola la percentuale di completamento
         return ($verifiedDocuments / $totalDocuments) * 100;
     }
+
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
 }

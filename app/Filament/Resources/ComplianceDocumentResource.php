@@ -27,7 +27,8 @@ class ComplianceDocumentResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Documenti di conformità';
 
-    protected static ?string $navigationGroup = 'Contratti';
+//    protected static ?string $navigationParentItem = 'Contratti';
+    protected static ?string $navigationGroup = 'Impostazioni';
 
     protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 

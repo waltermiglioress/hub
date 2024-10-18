@@ -13,6 +13,7 @@ use App\Tables\Columns\ProgressColumn;
 use Filament\Actions\Exports\Models\Export;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
@@ -39,6 +40,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -122,7 +124,6 @@ class ProductionResource extends Resource
                             })
                             ->required(),
 
-
                         TextInput::make('imponibile')
                             ->prefix('€')
                             ->readOnly()
@@ -153,7 +154,21 @@ class ProductionResource extends Resource
                                     ->displayFormat('d/m/Y')
                                     ->after('date_start')
                                     ->required(),
-                                Forms\Components\FileUpload::make('allegati')
+                                FileUpload::make('attachments')
+                                    ->multiple()
+                                    ->openable()
+                                    ->label('Allegati')// Gestisci il caricamento dei file
+                                    ->disk('attachment') // Definisci il disco
+                                    ->directory(function (Production $record) {
+                                        // Directory dinamica basata sul progetto e sul post
+                                        return "projects/{$record->project->code}/produzioni/{$record->project->contract}";
+                                    })
+                                    ->preserveFilenames()
+                                    ->storeFileNamesIn('filename')
+                                    ->formatStateUsing(function (Production $record) {
+                                        return $record?->attachments()->get()->pluck('filename')->toArray();
+                                    })->dehydrated(false)
+                                ,
                             ]),
 
                     ])->columnSpan(1)
@@ -288,7 +303,7 @@ class ProductionResource extends Resource
                         ->label('Esporta griglia')
                         ->columnMapping(false)
                         ->fileDisk('exports')
-                        ->fileName(fn (Export $export): string => "produzioni-{$export->getKey()}.csv")
+                        ->fileName(fn(Export $export): string => "produzioni-{$export->getKey()}.csv")
                         ->exporter(ProductionExporter::class),
                     BulkAction::make('export')
                         ->label('Esporta per competenza')
