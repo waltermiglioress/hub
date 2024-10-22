@@ -188,15 +188,19 @@ class UserResource extends Resource
                     ->circular(),
                 TextColumn::make('name')
                     ->label('Nome')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('surname')
                     ->label('Cognome')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('roles.name')
                     ->badge()
+                    ->sortable()
                     ->color('success')
                     ->label('Ruolo'),
                 TextColumn::make('tel')
@@ -211,6 +215,7 @@ class UserResource extends Resource
 
                 TextColumn::make('created_at')
                     ->label('Data Creazione')
+                    ->sortable()
                     ->date('d-m-Y')
             ])
             ->filters([
