@@ -20,6 +20,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\ActionSize;
@@ -159,9 +160,10 @@ class ProductionResource extends Resource
                                     ->openable()
                                     ->label('Allegati')// Gestisci il caricamento dei file
                                     ->disk('attachment') // Definisci il disco
-                                    ->directory(function (?Production $record) {
+                                    ->directory(function (?Production $record, Get $get) {
                                         // Directory dinamica basata sul progetto e sul post
-                                        return "projects/{$record->project->code}/produzioni/{$record->project->contract}";
+                                        $project = Project::find($get('project_id'));
+                                        return "projects/{$project->code}/produzioni/{$project->contract}";
                                     })
                                     ->preserveFilenames()
                                     ->storeFileNamesIn('filename')
