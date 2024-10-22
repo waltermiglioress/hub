@@ -85,9 +85,7 @@ class SubContractResource extends Resource
                                                 'compliance_document_id' => $doc->id,  // Per identificare il documento nel pivot
                                                 'title' => $doc->title,
                                                 'desc' => $doc->desc,
-//                                        'status' => 'pending',  // Default status
                                                 'notes' => $doc->notes,
-                                                'attachment' => null,
                                                 'verified_at' => null,
                                             ])->toArray());
                                         }
@@ -210,6 +208,7 @@ class SubContractResource extends Resource
 
 
                                     ])
+//                                    ->dehydrated(false)
                                     ->itemLabel(function (array $state, $record): HtmlString {
                                         // Determina il titolo del documento
                                         $title = null;

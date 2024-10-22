@@ -18,7 +18,7 @@ class SubContract extends Model
         'referent',
         'attachment',
     ];
-    protected $casts=[
+    protected $casts = [
         'attachments' => 'array',
     ];
 
@@ -101,5 +101,6 @@ class SubContract extends Model
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
+
 
 }

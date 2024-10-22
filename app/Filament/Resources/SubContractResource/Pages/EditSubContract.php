@@ -7,6 +7,7 @@ use App\Models\ComplianceDocumentSubContract;
 use App\Traits\HandleAttachments;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EditSubContract extends EditRecord
@@ -32,22 +33,26 @@ class EditSubContract extends EditRecord
     {
         $subContract = $this->record;
 
-        // Accedi allo stato del form tramite getState()
-        $formState = $this->form->getRawState();
 
-        // Accedi ai record della relazione 'complianceDocumentSubContracts' dallo stato del form
-        foreach ($formState['compliance_documents'] as $complianceDocumentData) {
-            // Trova il record di ComplianceDocumentSubContract appena aggiornato
-            $complianceDocument = $subContract->complianceDocumentSubContracts()->find($complianceDocumentData['id']);
 
-            // Ora puoi accedere agli allegati
-            $attachments = $complianceDocumentData['attachments'] ?? [];
 
-            // Chiama il metodo per gestire gli allegati
-            if ($complianceDocument) {
-                $complianceDocument->handleAttachments($complianceDocument, $attachments);
+            // Accedi allo stato del form tramite getState()
+            $formState = $this->form->getRawState();
+
+            // Accedi ai record della relazione 'complianceDocumentSubContracts' dallo stato del form
+            foreach ($formState['compliance_documents'] as $complianceDocumentData) {
+                // Trova il record di ComplianceDocumentSubContract appena aggiornato
+                $complianceDocument = $subContract->complianceDocumentSubContracts()->find($complianceDocumentData['id']);
+
+                // Ora puoi accedere agli allegati
+                $attachments = $complianceDocumentData['attachments'] ?? [];
+
+                // Chiama il metodo per gestire gli allegati
+                if ($complianceDocument) {
+                    $complianceDocument->handleAttachments($complianceDocument, $attachments);
+                }
             }
-        }
+
     }
 
 

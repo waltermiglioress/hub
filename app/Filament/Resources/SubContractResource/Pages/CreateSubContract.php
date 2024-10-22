@@ -7,10 +7,12 @@ use App\Models\ComplianceDocumentSubContract;
 use App\Traits\HandleAttachments;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\DB;
 
 class CreateSubContract extends CreateRecord
 {
     use HandleAttachments;
+
     protected static string $resource = SubContractResource::class;
 
     protected function getRedirectUrl(): string
@@ -18,24 +20,63 @@ class CreateSubContract extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+
+
+
+
     protected function afterCreate(): void
     {
         $subContract = $this->record;
 
-        // Ottieni lo stato del form (tutti i dati)
+        // Recupera lo stato del form, incluso il repeater compliance_documents
         $formState = $this->form->getRawState();
 
-        // Cicla attraverso i dati del repeater per ciascun 'compliance_document'
-        foreach ($formState['compliance_documents'] as $complianceDocumentData) {
-            // Trova o crea il record di ComplianceDocumentSubContract
-            $complianceDocument = $subContract->complianceDocumentSubContracts()->create($complianceDocumentData);
+        // Cicla attraverso i documenti di conformità nel repeater
+        foreach ($formState['compliance_documents'] as $index => $complianceDocumentData) {
+            // Verifica se il compliance_document_id è presente
+            if (empty($complianceDocumentData['compliance_document_id'])) {
+                continue;  // Salta i record incompleti
+            }
 
-            // Verifica che ci siano allegati nel campo 'attachments'
-            $attachments = $complianceDocumentData['attachments'] ?? [];
+            // Trova il record che è stato creato con sub_contract_id ma ha campi null
+            $existingRecord = $subContract->complianceDocumentSubContracts()
+                ->whereNull('compliance_document_id')  // Cerca i record con campi null
+                ->first();
 
-            if (!empty($attachments)) {
-                // Chiama il metodo per gestire gli allegati
-                $complianceDocument->handleAttachments($complianceDocument, $attachments);
+            if ($existingRecord) {
+                // Aggiorna il record trovato con i dati corretti
+                $existingRecord->update([
+                    'compliance_document_id' => $complianceDocumentData['compliance_document_id'],
+                    'notes' => $complianceDocumentData['notes'] ?? null,
+                    'status' => $complianceDocumentData['status'] ?? 'pending',
+                    'verified_at' => $complianceDocumentData['verified_at'] ?? null,
+                ]);
+
+                // Gestisci eventuali allegati (se presenti)
+                $attachments = $complianceDocumentData['attachments'] ?? [];
+                foreach ($attachments as $path) {
+                    $existingRecord->attachments()->create([
+                        'filename' => basename($path),
+                        'path' => $path,
+                    ]);
+                }
+            } else {
+                // Se non esiste nessun record da aggiornare, crea un nuovo record
+                $newRecord = $subContract->complianceDocumentSubContracts()->create([
+                    'compliance_document_id' => $complianceDocumentData['compliance_document_id'],
+                    'notes' => $complianceDocumentData['notes'] ?? null,
+                    'status' => $complianceDocumentData['status'] ?? 'pending',
+                    'verified_at' => $complianceDocumentData['verified_at'] ?? null,
+                ]);
+
+                // Gestisci eventuali allegati
+                $attachments = $complianceDocumentData['attachments'] ?? [];
+                foreach ($attachments as $path) {
+                    $newRecord->attachments()->create([
+                        'filename' => basename($path),
+                        'path' => $path,
+                    ]);
+                }
             }
         }
     }

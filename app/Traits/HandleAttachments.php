@@ -22,30 +22,7 @@ trait HandleAttachments
         $this->handleAttachments($record, $attachments);
     }
 
-//    protected function handleAttachments(Model $record, array $attachments): void
-//    {
-//        // Logica per gestire gli allegati
-//        $existingAttachments = $record->attachments()->pluck('filename')->toArray();
-//
-//        $attachmentsToAdd = array_diff($attachments, $existingAttachments);
-//        $attachmentsToRemove = array_diff($existingAttachments, $attachments);
-//
-//        foreach ($attachmentsToAdd as $path) {
-//            $record->attachments()->create([
-//                'filename' => basename($path),
-//                'path' => $path,
-//            ]);
-//        }
-//
-//        if (!empty($attachmentsToRemove)) {
-//            $record->attachments()
-//                ->whereIn('filename', $attachmentsToRemove)
-//                ->get()
-//                ->each(function ($attachment) {
-//                    $attachment->delete();
-//                });
-//        }
-//    }
+
 
     public function handleAttachments(Model $record, array $attachments): void
     {
