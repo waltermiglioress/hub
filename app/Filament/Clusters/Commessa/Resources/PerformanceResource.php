@@ -7,8 +7,10 @@ use App\Filament\Clusters\Commessa\Resources;
 use App\Filament\Resources\PerformanceResource\Pages;
 use App\Filament\Resources\PerformanceResource\RelationManagers;
 use App\Models\Performance;
+use App\Models\Production;
 use App\Models\Project;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -85,7 +87,24 @@ class PerformanceResource extends Resource
                         Select::make('period')
                             ->label('Periodo')
                             ->options(self::$months)
-                            ->required()
+                            ->required(),
+                        FileUpload::make('attachments')
+                            ->multiple()
+                            ->openable()
+                            ->columnSpanFull()
+                            ->label('Allegati')// Gestisci il caricamento dei file
+                            ->disk('attachment') // Definisci il disco
+                            ->directory(function (?Performance $record, Get $get) {
+                                // Directory dinamica basata sul progetto e sul post
+                                $project = Project::find($get('project_id'));
+                                $period = $get('period');
+                                return "projects/{$project->code}/performance/{$period}";
+                            })
+                            ->preserveFilenames()
+                            ->storeFileNamesIn('filename')
+                            ->formatStateUsing(function (?Performance $record) {
+                                return $record?->attachments()->get()->pluck('path')->toArray();
+                            })->dehydrated(false)
                     ])
                     ->columns(3)->columnSpan(2),
                 Section::make('Indici')
