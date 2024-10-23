@@ -141,8 +141,7 @@ class ProductionResource extends Resource
                                     ->options([
                                         'fatturato' => 'FATTURATO',
                                         'contabilizzato e non ft' => 'CONTABILIZZATO E NON FATTURATO',
-                                        'stimato' => 'STIMATO',
-                                        'in corso' => 'IN CORSO',
+                                        'stimato' => 'STIMATO E NON CONT',
                                     ])
                                     ->required(),
                                 DatePicker::make('date_start')
@@ -212,18 +211,11 @@ class ProductionResource extends Resource
 
 
                 TextColumn::make('status')->label('Stato')
-//                    ->options([
-//                        'fatturato'=>'FATTURATO',
-//                        'contabilizzato e non ft'=>'CONTABILIZZATO E NON FATTURATO',
-//                        'stimato'=>'STIMATO',
-//                        'in corso'=>'IN CORSO',
-//                    ]),
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'fatturato' => 'success',
                         'contabilizzato e non ft' => 'warning',
                         'stimato' => 'estimated',
-                        'in corso' => 'primary',
                     }),
 
                 TextColumn::make('updated_at')
@@ -248,8 +240,7 @@ class ProductionResource extends Resource
                     ->options([
                         'fatturato' => 'FATTURATO',
                         'contabilizzato e non ft' => 'CONTABILIZZATO E NON FATTURATO',
-                        'stimato' => 'STIMATO',
-                        'in corso' => 'IN CORSO',
+                        'stimato' => 'STIMATO E NON CONT',
                     ]),
                 SelectFilter::make('project_id')
                     ->label('Commessa')

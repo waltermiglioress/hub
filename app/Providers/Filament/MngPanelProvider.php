@@ -55,7 +55,6 @@ class MngPanelProvider extends PanelProvider
 
 //            ->brandLogoHeight('8rem')
             ->favicon(asset('image/logo.png'))
-            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -80,6 +79,7 @@ class MngPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->sidebarWidth('18rem')
             ->sidebarCollapsibleOnDesktop()
             ->collapsedSidebarWidth('9rem')
             ->maxContentWidth(MaxWidth::Full)

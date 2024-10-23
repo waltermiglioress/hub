@@ -26,7 +26,7 @@ class ProductionOverview extends BaseWidget
         $fatturato= $this->getPageTableQuery()->where('status','fatturato')->sum('imponibile');
         $stimato= $this->getPageTableQuery()->where('status','stimato')->sum('imponibile');
         $contabilizzatonft= $this->getPageTableQuery()->where('status','contabilizzato e non ft')->sum('imponibile');
-        $incorso= $this->getPageTableQuery()->where('status','in corso')->sum('imponibile');
+//        $incorso= $this->getPageTableQuery()->where('status','in corso')->sum('imponibile');
 
         $formatNumber = function (int $number): string {
             if ($number < 1000) {
@@ -44,14 +44,13 @@ class ProductionOverview extends BaseWidget
 
             Stat::make('Produzione fatturata', '€'.$formatNumber($fatturato))
 //                ->description('32k increase')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
+//                ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success')
                 ->extraAttributes([
                     'class' => 'mng-wdg-prd mng-inv-card']),
-            Stat::make('Produzione stimata', '€'.$formatNumber($stimato))
-//                ->description('7% increase')
-                ->descriptionIcon('heroicon-m-arrow-trending-down')
-
+            Stat::make('Produzione stimata e non contabilizzata', '€'.$formatNumber($stimato))
+//                ->description('non contabilizzata')
+//                ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('estimated')
                 ->extraAttributes([
                     'class' => 'mng-wdg-prd mng-est-card']),
@@ -61,12 +60,7 @@ class ProductionOverview extends BaseWidget
                 ->color('danger')
                 ->extraAttributes([
                     'class' => 'mng-wdg-prd mng-cont-card']),
-            Stat::make('Produzione in corso', '€'.$formatNumber($incorso))
-//                ->description('3% increase')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color('primary')
-                ->extraAttributes([
-                    'class' => 'mng-wdg-prd mng-wip-card']),
+
         ];
     }
 }
